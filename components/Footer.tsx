@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useConfigSetting } from '@/hooks/useConfigStore';
+import { useImageUrl } from '@/hooks/useImageStore';
 
 const serviceCategories = [
   'Modular Kitchen',
@@ -23,6 +24,7 @@ export function Footer() {
   const contactPhone = useConfigSetting('contact_phone', '+91 98765 43210');
   const contactWhatsapp = useConfigSetting('contact_whatsapp', '919876543210');
   const contactEmail = useConfigSetting('contact_email', 'hello@jayinteriors.in');
+  const logoUrl = useImageUrl('site_logo', '');
 
   const trustBadges = [
     { value: '45 Days', label: 'Handover Guarantee' },
@@ -54,9 +56,15 @@ export function Footer() {
         {/* Brand Block */}
         <div className="md:col-span-1 flex flex-col gap-6">
           <Link href="/" className="magnetic-target cursor-none w-fit flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-brass flex items-center justify-center shrink-0">
-              <span className="text-charcoal font-serif font-bold text-sm">JI</span>
-            </div>
+            {logoUrl ? (
+              <div className="w-10 h-10 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0">
+                <img src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
+              </div>
+            ) : (
+              <div className="w-10 h-10 bg-brass flex items-center justify-center shrink-0">
+                <span className="text-charcoal font-serif font-bold text-sm">JI</span>
+              </div>
+            )}
             <h3 className="text-2xl font-serif italic hover:text-brass transition-colors duration-500">
               Jay Interiors
             </h3>

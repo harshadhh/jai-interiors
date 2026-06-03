@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { uploadToCloudinary, validateImageFile, type UploadProgress } from '@/lib/cloudinary';
 import { setImage, resetImage, getImage, resetAllImages } from '@/lib/imageStore';
 import { getConfig, setConfig } from '@/lib/configStore';
@@ -13,6 +14,7 @@ const IMAGE_SLOTS = {
     label: 'Home Page',
     icon: '🏠',
     slots: [
+      { id: 'site_logo', label: 'Global Site Logo (Square/Transparent)', defaultSrc: '', section: 'Global Branding' },
       { id: 'hero_bg', label: 'Hero Background', defaultSrc: 'https://picsum.photos/seed/hero-luxury/1920/1080', section: 'Hero Section' },
       { id: 'featured_1', label: 'Featured Project 1 — The Penthouse', defaultSrc: 'https://picsum.photos/seed/penth1/900/1200', section: 'The Vault (Featured Work)' },
       { id: 'featured_2', label: 'Featured Project 2 — Villa 74', defaultSrc: 'https://picsum.photos/seed/villa74x/900/1200', section: 'The Vault (Featured Work)' },
@@ -271,15 +273,21 @@ function ImageSlotCard({
       <p className="admin-slot-id">{slotId}</p>
 
       {/* Current Image Preview */}
-      <div className="admin-preview-wrap">
-        <Image
-          src={state.currentUrl}
-          alt={label}
-          fill
-          className="admin-preview-img"
-          unoptimized
-          referrerPolicy="no-referrer"
-        />
+      <div className="admin-preview-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
+        {state.currentUrl ? (
+          <Image
+            src={state.currentUrl}
+            alt={label}
+            fill
+            className="admin-preview-img"
+            unoptimized
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            {slotId === 'site_logo' ? 'JI (Text Fallback Active)' : 'No Image Override'}
+          </div>
+        )}
         {isOverridden && (
           <div className="admin-cloudinary-badge">
             <span>☁ Cloudinary</span>
@@ -428,6 +436,27 @@ export default function AdminPage() {
   });
   const [settingsSaved, setSettingsSaved] = useState(false);
 
+  // States for changing admin password
+  const [passChange, setPassChange] = useState({ current: '', newPass: '', confirm: '' });
+  const [passChangeError, setPassChangeError] = useState('');
+  const [passChangeSuccess, setPassChangeSuccess] = useState(false);
+
+  // Logo state for Admin Topbar
+  const [logoUrl, setLogoUrl] = useState(() => typeof window !== 'undefined' ? getImage('site_logo', '') : '');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handler = (e: Event) => {
+        const detail = (e as CustomEvent).detail;
+        if (detail.slotId === 'site_logo' || detail.slotId === '*') {
+          setLogoUrl(detail.url || '');
+        }
+      };
+      window.addEventListener('jay-image-update', handler);
+      return () => window.removeEventListener('jay-image-update', handler);
+    }
+  }, []);
+
   // Load basic configurations
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -491,7 +520,8 @@ export default function AdminPage() {
       new Promise((r) => setTimeout(r, 600)),
     ]);
 
-    if (hash === CORRECT_HASH) {
+    const storedHash = getConfig('admin_password_hash', CORRECT_HASH);
+    if (hash === storedHash) {
       sessionStorage.setItem(ADMIN_PASSWORD_KEY, 'true');
       localStorage.removeItem(ATTEMPT_KEY);
       localStorage.removeItem(LOCKOUT_KEY);
@@ -523,6 +553,30 @@ export default function AdminPage() {
     setShowResetConfirm(false);
     setGlobalResetDone(true);
     setTimeout(() => setGlobalResetDone(false), 4000);
+  };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPassChangeError('');
+    setPassChangeSuccess(false);
+
+    if (passChange.newPass !== passChange.confirm) {
+      setPassChangeError('New passwords do not match.');
+      return;
+    }
+
+    const currentHash = getConfig('admin_password_hash', CORRECT_HASH);
+    const verifyCurrent = await hashPassword(passChange.current);
+
+    if (verifyCurrent !== currentHash) {
+      setPassChangeError('Incorrect current password.');
+      return;
+    }
+
+    const newHash = await hashPassword(passChange.newPass);
+    setConfig('admin_password_hash', newHash);
+    setPassChangeSuccess(true);
+    setPassChange({ current: '', newPass: '', confirm: '' });
   };
 
   // Check if Cloudinary is configured
@@ -576,6 +630,23 @@ export default function AdminPage() {
             >
               {isVerifying ? 'Verifying…' : isLocked ? `Wait ${lockoutCountdown}s` : 'Unlock Admin Panel →'}
             </button>
+            
+            <Link
+              href="/"
+              className="admin-form-btn"
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                textDecoration: 'none',
+                marginTop: '10px',
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: 'rgba(255,255,255,0.6)',
+              }}
+            >
+              ← Back to Website
+            </Link>
+
             {!isLocked && attemptsLeft < MAX_ATTEMPTS && (
               <p className="admin-attempts-left">{attemptsLeft} attempt{attemptsLeft !== 1 ? 's' : ''} remaining</p>
             )}
@@ -601,7 +672,11 @@ export default function AdminPage() {
       <header className="admin-topbar">
         <div className="admin-topbar-inner">
           <div className="admin-topbar-brand">
-            <span className="admin-topbar-logo">JI</span>
+            {logoUrl ? (
+              <img src={logoUrl} alt="Logo" className="admin-topbar-logo" style={{ objectFit: 'contain', background: 'transparent' }} />
+            ) : (
+              <span className="admin-topbar-logo">JI</span>
+            )}
             <div>
               <p className="admin-topbar-title">Jay Interiors</p>
               <p className="admin-topbar-subtitle">Image Manager</p>
@@ -881,6 +956,57 @@ NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
                   )}
                 </div>
               </form>
+
+              {/* CHANGE PASSWORD CARD */}
+              <div className="admin-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px', maxWidth: '600px' }}>
+                <p className="admin-sidebar-heading" style={{ margin: 0, color: '#C8A97E', fontSize: '14px', letterSpacing: '0.1em' }}>Change Admin Password</p>
+                <form onSubmit={handleUpdatePassword} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Current Password</label>
+                    <input 
+                      type="password" 
+                      required
+                      value={passChange.current}
+                      onChange={(e) => setPassChange(prev => ({ ...prev, current: e.target.value }))}
+                      className="admin-form-input" 
+                      style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                    />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>New Password</label>
+                      <input 
+                        type="password" 
+                        required
+                        value={passChange.newPass}
+                        onChange={(e) => setPassChange(prev => ({ ...prev, newPass: e.target.value }))}
+                        className="admin-form-input" 
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Confirm New Password</label>
+                      <input 
+                        type="password" 
+                        required
+                        value={passChange.confirm}
+                        onChange={(e) => setPassChange(prev => ({ ...prev, confirm: e.target.value }))}
+                        className="admin-form-input" 
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                      />
+                    </div>
+                  </div>
+                  {passChangeError && <p style={{ color: '#ff4d4d', fontSize: '12px', margin: '5px 0 0 0' }}>{passChangeError}</p>}
+                  {passChangeSuccess && <p style={{ color: '#25D366', fontSize: '12px', margin: '5px 0 0 0', fontWeight: 'bold' }}>✓ Password updated successfully!</p>}
+                  <button 
+                    type="submit" 
+                    className="admin-form-btn" 
+                    style={{ background: '#C8A97E', color: '#1A1A1A', fontWeight: 'bold', border: 'none', padding: '14px', cursor: 'pointer', marginTop: '10px' }}
+                  >
+                    Update Password
+                  </button>
+                </form>
+              </div>
             </div>
           ) : (
             <div>

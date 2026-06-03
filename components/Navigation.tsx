@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { useImageUrl } from '@/hooks/useImageStore';
 import { useConfigSetting } from '@/hooks/useConfigStore';
 
 const links = [
@@ -19,6 +20,7 @@ export function Navigation() {
   const pathname = usePathname();
   const googleRatingValue = useConfigSetting('google_rating_value', '5.0');
   const contactWhatsapp = useConfigSetting('contact_whatsapp', '919876543210');
+  const logoUrl = useImageUrl('site_logo', '');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -51,9 +53,15 @@ export function Navigation() {
             className="flex items-center gap-3 magnetic-target cursor-none z-[60] relative group"
           >
             {/* Logo Space */}
-            <div className="w-9 h-9 bg-brass flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <span className="text-charcoal font-serif font-bold text-sm tracking-tighter">JI</span>
-            </div>
+            {logoUrl ? (
+              <div className="w-9 h-9 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <img src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
+              </div>
+            ) : (
+              <div className="w-9 h-9 bg-brass flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <span className="text-charcoal font-serif font-bold text-sm tracking-tighter">JI</span>
+              </div>
+            )}
             <span className="text-xl md:text-2xl font-serif tracking-tighter uppercase font-medium">
               Jay Interiors
             </span>
