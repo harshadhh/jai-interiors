@@ -5,8 +5,12 @@ import Lenis from 'lenis';
 import { Cursor } from '@/components/Cursor';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { usePathname } from 'next/navigation';
 
 export function Providers({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin');
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -35,9 +39,10 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <>
       <Cursor />
-      <Navigation />
+      {!isAdmin && <Navigation />}
       {children}
-      <Footer />
+      {!isAdmin && <Footer />}
     </>
   );
 }
+
