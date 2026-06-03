@@ -4,6 +4,8 @@
  * No SDK required — works perfectly with Next.js static export.
  */
 
+import { getConfig } from './configStore';
+
 export interface CloudinaryUploadResult {
   secure_url: string;
   public_id: string;
@@ -29,13 +31,31 @@ export async function uploadToCloudinary(
   file: File,
   onProgress?: (progress: UploadProgress) => void
 ): Promise<CloudinaryUploadResult> {
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+  const envCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const envUploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-  if (!cloudName || !uploadPreset) {
-    throw new Error(
-      'Cloudinary credentials missing. Please set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET in your .env.local file.'
-    );
+  // 1. Get dynamic user-entered credentials from the Admin Panel configStore
+  const dynamicCloudName = getConfig('cloudinary_cloud_name', '');
+  const dynamicUploadPreset = getConfig('cloudinary_upload_preset', '');
+
+  // 2. Resolve final Cloud Name (Dynamic UI > Environment > Fallback)
+  let cloudName = '';
+  if (dynamicCloudName) {
+    cloudName = dynamicCloudName;
+  } else if (envCloudName && envCloudName !== 'YOUR_CLOUD_NAME_HERE') {
+    cloudName = envCloudName;
+  } else {
+    cloudName = 'doy3h1jvx';
+  }
+
+  // 3. Resolve final Upload Preset
+  let uploadPreset = '';
+  if (dynamicUploadPreset) {
+    uploadPreset = dynamicUploadPreset;
+  } else if (envUploadPreset && envUploadPreset !== 'jay_interiors_upload') {
+    uploadPreset = envUploadPreset;
+  } else {
+    uploadPreset = 'jay_interiors';
   }
 
   const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
