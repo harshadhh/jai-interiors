@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring } from 'motion/react';
 
 export function Cursor() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobileDevice, setIsMobileDevice] = useState(true);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
@@ -14,6 +15,16 @@ export function Cursor() {
   const smoothY = useSpring(cursorY, springOptions);
 
   useEffect(() => {
+    // Check if it is a touch device or small screen
+    const checkDevice = () => {
+      const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobileDevice(isTouch || isSmallScreen);
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX - 16);
       cursorY.set(e.clientY - 16);
@@ -38,10 +49,13 @@ export function Cursor() {
     window.addEventListener('mouseover', handleMouseOver);
 
     return () => {
+      window.removeEventListener('resize', checkDevice);
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
     };
   }, [cursorX, cursorY]);
+
+  if (isMobileDevice) return null;
 
   return (
     <>
