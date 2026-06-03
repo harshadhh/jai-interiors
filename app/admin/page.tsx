@@ -423,6 +423,8 @@ export default function AdminPage() {
     contact_address: '',
     studio_hours_weekdays: '',
     studio_hours_saturday: '',
+    cloudinary_cloud_name: '',
+    cloudinary_upload_preset: '',
   });
   const [settingsSaved, setSettingsSaved] = useState(false);
 
@@ -439,6 +441,8 @@ export default function AdminPage() {
           contact_address: getConfig('contact_address', 'Baner, Pune — 411045'),
           studio_hours_weekdays: getConfig('studio_hours_weekdays', '10:00 – 18:00'),
           studio_hours_saturday: getConfig('studio_hours_saturday', '10:00 – 14:00'),
+          cloudinary_cloud_name: getConfig('cloudinary_cloud_name', ''),
+          cloudinary_upload_preset: getConfig('cloudinary_upload_preset', ''),
         });
       }, 0);
       return () => clearTimeout(timer);
@@ -523,8 +527,9 @@ export default function AdminPage() {
 
   // Check if Cloudinary is configured
   const cloudinaryConfigured =
-    !!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME &&
-    !!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    (!!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME &&
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME !== 'YOUR_CLOUD_NAME_HERE') ||
+    true; // Configured via built-in fallback
 
   // Check if Firebase Database is configured
   const databaseConfigured = !!process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL;
@@ -832,6 +837,31 @@ NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
                         type="text" 
                         value={settings.studio_hours_saturday}
                         onChange={(e) => setSettings(prev => ({ ...prev, studio_hours_saturday: e.target.value }))}
+                        className="admin-form-input" 
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '15px', marginTop: '5px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Custom Cloudinary Cloud Name</label>
+                      <input 
+                        type="text" 
+                        value={settings.cloudinary_cloud_name}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cloudinary_cloud_name: e.target.value }))}
+                        placeholder="doy3h1jvx (default fallback)"
+                        className="admin-form-input" 
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Custom Cloudinary Upload Preset (Unsigned)</label>
+                      <input 
+                        type="text" 
+                        value={settings.cloudinary_upload_preset}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cloudinary_upload_preset: e.target.value }))}
+                        placeholder="jay_interiors (default fallback)"
                         className="admin-form-input" 
                         style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
                       />
