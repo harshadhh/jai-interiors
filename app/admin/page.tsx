@@ -622,48 +622,7 @@ export default function AdminPage() {
         </div>
       </header>
 
-      {/* ── CLOUDINARY CONFIG WARNING ── */}
-      {!cloudinaryConfigured && (
-        <div className="admin-config-warning">
-          <div className="admin-config-warning-inner">
-            <span className="admin-warning-icon">⚠️</span>
-            <div>
-              <p className="admin-warning-title">Cloudinary Not Configured</p>
-              <p className="admin-warning-desc">
-                Add the following to your <code>.env.local</code> file, then restart the dev server:
-              </p>
-              <pre className="admin-warning-code">{`NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
-NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=jay_interiors_upload
-NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
-              <p className="admin-warning-desc admin-warning-steps">
-                <strong>Steps:</strong> 1. Go to <a href="https://cloudinary.com" target="_blank" className="admin-link">cloudinary.com</a> →
-                Login → Settings → Upload → Upload Presets → Add Upload Preset →
-                Set Signing Mode to <strong>Unsigned</strong> → Save → Copy the preset name above.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {!databaseConfigured && (
-        <div className="admin-config-warning" style={{ backgroundColor: 'rgba(200, 169, 126, 0.1)', borderColor: 'rgba(200, 169, 126, 0.3)' }}>
-          <div className="admin-config-warning-inner">
-            <span className="admin-warning-icon">☁️</span>
-            <div>
-              <p className="admin-warning-title" style={{ color: '#C8A97E' }}>Firebase Database Sync Inactive</p>
-              <p className="admin-warning-desc" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                Image updates will only save locally to your browser storage. To enable global instant sync across all users:
-              </p>
-              <p className="admin-warning-desc admin-warning-steps" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                1. Go to your Firebase Console and create a <strong>Realtime Database</strong>. <br />
-                2. Copy the database URL (e.g., <code>https://your-project.firebaseio.com/</code>). <br />
-                3. Add it to <code>.env.local</code>:
-              </p>
-              <pre className="admin-warning-code" style={{ borderColor: 'rgba(200, 169, 126, 0.2)' }}>{`NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your-project.firebaseio.com/`}</pre>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── GLOBAL RESET CONFIRM ── */}
       {showResetConfirm && (
@@ -729,6 +688,48 @@ NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
 
         {/* ── MAIN CONTENT ── */}
         <main className="admin-main">
+          {/* ── CLOUDINARY CONFIG WARNING ── */}
+          {!cloudinaryConfigured && (
+            <div className="admin-config-warning">
+              <div className="admin-config-warning-inner">
+                <span className="admin-warning-icon">⚠️</span>
+                <div>
+                  <p className="admin-warning-title">Cloudinary Not Configured</p>
+                  <p className="admin-warning-desc">
+                    Add the following to your <code>.env.local</code> file, then restart the dev server:
+                  </p>
+                  <pre className="admin-warning-code">{`NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=jay_interiors_upload
+NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
+                  <p className="admin-warning-desc admin-warning-steps">
+                    <strong>Steps:</strong> 1. Go to <a href="https://cloudinary.com" target="_blank" className="admin-link">cloudinary.com</a> →
+                    Login → Settings → Upload → Upload Presets → Add Upload Preset →
+                    Set Signing Mode to <strong>Unsigned</strong> → Save → Copy the preset name above.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!databaseConfigured && (
+            <div className="admin-config-warning" style={{ backgroundColor: 'rgba(200, 169, 126, 0.1)', borderColor: 'rgba(200, 169, 126, 0.3)' }}>
+              <div className="admin-config-warning-inner">
+                <span className="admin-warning-icon">☁️</span>
+                <div>
+                  <p className="admin-warning-title" style={{ color: '#C8A97E' }}>Firebase Database Sync Inactive</p>
+                  <p className="admin-warning-desc" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    Image updates will only save locally to your browser storage. To enable global instant sync across all users:
+                  </p>
+                  <p className="admin-warning-desc admin-warning-steps" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                    1. Go to your Firebase Console and create a <strong>Realtime Database</strong>. <br />
+                    2. Copy the database URL (e.g., <code>https://your-project.firebaseio.com/</code>). <br />
+                    3. Add it to <code>.env.local</code>:
+                  </p>
+                  <pre className="admin-warning-code" style={{ borderColor: 'rgba(200, 169, 126, 0.2)' }}>{`NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your-project.firebaseio.com/`}</pre>
+                </div>
+              </div>
+            </div>
+          )}
           {activeTab === 'basic_settings' ? (
             <div>
               <div className="admin-page-header">

@@ -297,14 +297,11 @@
 
 /* ── CONFIG WARNING BANNER ── */
 .admin-config-warning {
-  position: fixed;
-  top: var(--admin-topbar-h);
-  left: 0;
-  right: 0;
-  z-index: 90;
   background: var(--admin-warning-bg);
-  border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: var(--admin-radius);
   padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .admin-config-warning-inner {
