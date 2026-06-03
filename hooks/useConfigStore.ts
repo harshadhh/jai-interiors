@@ -9,12 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getConfig, getAllConfigs } from '@/lib/configStore';
 
 export function useConfigSetting(key: string, defaultValue: string): string {
-  const [val, setVal] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return getConfig(key, defaultValue);
-    }
-    return defaultValue;
-  });
+  const [val, setVal] = useState<string>(defaultValue);
 
   const handleUpdate = useCallback(
     (e: Event) => {

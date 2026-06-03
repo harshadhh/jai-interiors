@@ -10,13 +10,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getImage, getAllOverrides } from '@/lib/imageStore';
 
 export function useImageUrl(slotId: string, defaultUrl: string): string {
-  const [url, setUrl] = useState<string>(() => {
-    // On initial render, try to read from localStorage
-    if (typeof window !== 'undefined') {
-      return getImage(slotId, defaultUrl);
-    }
-    return defaultUrl;
-  });
+  const [url, setUrl] = useState<string>(defaultUrl);
 
   const handleUpdate = useCallback(
     (e: Event) => {
