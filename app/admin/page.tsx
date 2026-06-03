@@ -378,41 +378,35 @@ async function hashPassword(password: string): Promise<string> {
 // ─── MAIN ADMIN PAGE ──────────────────────────────────────────────────────────
 
 export default function AdminPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem(ADMIN_PASSWORD_KEY) === 'true';
-    }
-    return false;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
-  const [lockedUntil, setLockedUntil] = useState<number | null>(() => {
+  const [lockedUntil, setLockedUntil] = useState<number | null>(null);
+  const [attemptsLeft, setAttemptsLeft] = useState(MAX_ATTEMPTS);
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      const lockoutTs = localStorage.getItem(LOCKOUT_KEY);
-      if (lockoutTs) {
-        const ts = parseInt(lockoutTs, 10);
-        if (Date.now() < ts) {
-          return ts;
+      const timer = setTimeout(() => {
+        setIsAuthenticated(sessionStorage.getItem(ADMIN_PASSWORD_KEY) === 'true');
+        const lockoutTs = localStorage.getItem(LOCKOUT_KEY);
+        if (lockoutTs) {
+          const ts = parseInt(lockoutTs, 10);
+          if (Date.now() < ts) {
+            setLockedUntil(ts);
+            setAttemptsLeft(0);
+          } else {
+            localStorage.removeItem(LOCKOUT_KEY);
+            localStorage.removeItem(ATTEMPT_KEY);
+          }
         } else {
-          localStorage.removeItem(LOCKOUT_KEY);
-          localStorage.removeItem(ATTEMPT_KEY);
+          const attempts = parseInt(localStorage.getItem(ATTEMPT_KEY) || '0', 10);
+          setAttemptsLeft(Math.max(0, MAX_ATTEMPTS - attempts));
         }
-      }
+      }, 0);
+      return () => clearTimeout(timer);
     }
-    return null;
-  });
-  const [attemptsLeft, setAttemptsLeft] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const lockoutTs = localStorage.getItem(LOCKOUT_KEY);
-      if (lockoutTs && Date.now() < parseInt(lockoutTs, 10)) {
-        return 0;
-      }
-      const attempts = parseInt(localStorage.getItem(ATTEMPT_KEY) || '0', 10);
-      return Math.max(0, MAX_ATTEMPTS - attempts);
-    }
-    return MAX_ATTEMPTS;
-  });
+  }, []);
   const [lockoutCountdown, setLockoutCountdown] = useState(0);
   const [activeTab, setActiveTab] = useState<TabKey | 'basic_settings'>('home');
   const [activePortfolioProject, setActivePortfolioProject] = useState<string>('covers');
