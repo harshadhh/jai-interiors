@@ -178,19 +178,35 @@ export function Footer() {
       </div>
 
       {/* ── BOTTOM BAR ── */}
-      <div className="max-w-7xl mx-auto border-t border-alabaster/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] tracking-widest uppercase">
-        <p className="opacity-40">
-          © {new Date().getFullYear()} Jay Interiors. All Rights Reserved. · Baner, Pune ·{' '}
+      <div className="max-w-7xl mx-auto border-t border-alabaster/10 pt-8 grid grid-cols-1 md:grid-cols-3 items-center gap-4 text-[10px] tracking-widest uppercase">
+        <p className="opacity-40 text-center md:text-left">
+          © {new Date().getFullYear()} Jay Interiors. All Rights Reserved. · Baner, Pune
+        </p>
+
+        {/* Center: Designed By with Glow Effect */}
+        <div className="flex items-center justify-center">
           <a
             href="https://peakmediastudio.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-brass transition-all duration-300 magnetic-target cursor-none underline decoration-brass/30 underline-offset-4"
+            className="magnetic-target cursor-none relative font-medium group tracking-[0.25em] transition-all duration-500"
+            style={{
+              animation: 'peak-glow 3s ease-in-out infinite alternate',
+            }}
           >
             Designed by PEAKMEDIASTUDIO
+            {/* Glowing underscore line */}
+            <span 
+              className="absolute bottom-[-6px] left-0 w-full h-[1px] bg-brass/50 scale-x-50 group-hover:scale-x-100 transition-transform duration-500 origin-center" 
+              style={{
+                boxShadow: '0 0 8px #C8A97E, 0 0 15px #C8A97E',
+              }}
+            />
           </a>
-        </p>
-        <div className="flex items-center gap-8">
+        </div>
+
+        {/* Right: Site Links */}
+        <div className="flex items-center justify-center md:justify-end gap-8">
           <Link href="#" className="opacity-40 hover:opacity-70 hover:text-alabaster transition-all magnetic-target cursor-none">Privacy Policy</Link>
           <Link href="#" className="opacity-40 hover:opacity-70 hover:text-alabaster transition-all magnetic-target cursor-none">Terms of Service</Link>
           <Link
@@ -204,6 +220,20 @@ export function Footer() {
             Admin
           </Link>
         </div>
+
+        {/* Custom Glow Styles */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes peak-glow {
+            0% {
+              text-shadow: 0 0 6px rgba(200, 169, 126, 0.4), 0 0 15px rgba(200, 169, 126, 0.2);
+              color: rgba(200, 169, 126, 0.85);
+            }
+            100% {
+              text-shadow: 0 0 14px rgba(200, 169, 126, 0.9), 0 0 30px rgba(200, 169, 126, 0.5);
+              color: #ffffff;
+            }
+          }
+        `}} />
       </div>
     </footer>
   );
