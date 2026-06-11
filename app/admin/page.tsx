@@ -143,6 +143,127 @@ const IMAGE_SLOTS = {
   },
 };
 
+// ─── DEFAULT PROJECT TEXT DETAILS ──────────────────────────────────────────────
+const DEFAULT_PROJECT_TEXTS: Record<string, { title: string; client: string; category: string; year: string; area: string }> = {
+  'the-penthouse': { title: 'The Penthouse', client: 'Baner Enclave', category: 'Residential', year: '2024', area: '4,200 sq ft' },
+  'villa-74': { title: 'Villa 74', client: 'Koregaon Park', category: 'Residential', year: '2024', area: '3,600 sq ft' },
+  'noir-studio-kitchen': { title: 'Noir Studio Kitchen', client: 'Kalyani Nagar', category: 'Kitchens', year: '2023', area: '580 sq ft' },
+  'glass-pavilion': { title: 'Glass Pavilion', client: 'Aundh', category: 'Living Spaces', year: '2023', area: '2,100 sq ft' },
+  'the-silk-suite': { title: 'The Silk Suite', client: 'Wakad', category: 'Residential', year: '2023', area: '2,800 sq ft' },
+  'matte-kitchen': { title: 'Matte Kitchen', client: 'Baner', category: 'Kitchens', year: '2022', area: '420 sq ft' },
+  'the-marble-loft': { title: 'The Marble Loft', client: 'Viman Nagar', category: 'Living Spaces', year: '2022', area: '1,800 sq ft' },
+  'studio-black': { title: 'Studio Black', client: 'Pune CBD', category: 'Commercial', year: '2022', area: '950 sq ft' },
+};
+
+function ProjectTextDetailsForm({ slug }: { slug: string }) {
+  const defaults = DEFAULT_PROJECT_TEXTS[slug];
+  const [details, setDetails] = useState({
+    title: '',
+    client: '',
+    category: '',
+    year: '',
+    area: '',
+  });
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDetails({
+      title: getConfig(`project_${slug}_title`, defaults?.title || ''),
+      client: getConfig(`project_${slug}_client`, defaults?.client || ''),
+      category: getConfig(`project_${slug}_category`, defaults?.category || ''),
+      year: getConfig(`project_${slug}_year`, defaults?.year || ''),
+      area: getConfig(`project_${slug}_area`, defaults?.area || ''),
+    });
+  }, [slug, defaults]);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    setConfig(`project_${slug}_title`, details.title);
+    setConfig(`project_${slug}_client`, details.client);
+    setConfig(`project_${slug}_category`, details.category);
+    setConfig(`project_${slug}_year`, details.year);
+    setConfig(`project_${slug}_area`, details.area);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 4000);
+  };
+
+  return (
+    <form onSubmit={handleSave} className="admin-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '15px', gridColumn: 'span 2', maxWidth: '600px', width: '100%' }}>
+      <p className="admin-sidebar-heading" style={{ margin: 0, color: '#C8A97E', fontSize: '14px', letterSpacing: '0.1em' }}>Edit Project Details</p>
+      
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+        <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Project Title</label>
+        <input 
+          type="text" 
+          value={details.title}
+          onChange={(e) => setDetails(p => ({ ...p, title: e.target.value }))}
+          className="admin-form-input" 
+          style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '10px', fontSize: '13px' }}
+        />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Client / Location</label>
+          <input 
+            type="text" 
+            value={details.client}
+            onChange={(e) => setDetails(p => ({ ...p, client: e.target.value }))}
+            className="admin-form-input" 
+            style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '10px', fontSize: '13px' }}
+          />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Category</label>
+          <input 
+            type="text" 
+            value={details.category}
+            onChange={(e) => setDetails(p => ({ ...p, category: e.target.value }))}
+            className="admin-form-input" 
+            style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '10px', fontSize: '13px' }}
+          />
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Year</label>
+          <input 
+            type="text" 
+            value={details.year}
+            onChange={(e) => setDetails(p => ({ ...p, year: e.target.value }))}
+            className="admin-form-input" 
+            style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '10px', fontSize: '13px' }}
+          />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Area / Sq Ft</label>
+          <input 
+            type="text" 
+            value={details.area}
+            onChange={(e) => setDetails(p => ({ ...p, area: e.target.value }))}
+            className="admin-form-input" 
+            style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '10px', fontSize: '13px' }}
+          />
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        className="admin-form-btn" 
+        style={{ background: '#C8A97E', color: '#1A1A1A', fontWeight: 'bold', border: 'none', padding: '12px', cursor: 'pointer', marginTop: '5px' }}
+      >
+        Save Details
+      </button>
+
+      {saved && (
+        <p style={{ color: '#25D366', fontSize: '12px', margin: '5px 0 0 0', fontWeight: 'bold' }}>✓ Details saved successfully & synced!</p>
+      )}
+    </form>
+  );
+}
+
 // ─── TYPES ────────────────────────────────────────────────────────────────────
 
 type TabKey = keyof typeof IMAGE_SLOTS;
@@ -176,6 +297,7 @@ function ImageSlotCard({
     isDragging: false,
     currentUrl: typeof window !== 'undefined' ? getImage(slotId, defaultSrc) : defaultSrc,
   });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -344,11 +466,42 @@ function ImageSlotCard({
         </div>
       )}
 
-      {/* Reset Button */}
+      {/* Reset/Delete Button */}
       {isOverridden && (
-        <button className="admin-reset-btn" onClick={handleReset}>
-          ↺ Reset to Default
+        <button className="admin-reset-btn" onClick={() => setShowDeleteConfirm(true)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          🗑️ Delete Uploaded Image
         </button>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="admin-modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="admin-modal-title">Delete Uploaded Image?</h3>
+            <p className="admin-modal-desc">
+              Are you sure you want to delete the uploaded image override for this slot and revert back to the default placeholder?
+            </p>
+            <div className="admin-modal-actions">
+              <button 
+                type="button" 
+                className="admin-modal-btn admin-modal-btn--cancel" 
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="admin-modal-btn admin-modal-btn--danger" 
+                onClick={() => {
+                  handleReset();
+                  setShowDeleteConfirm(false);
+                }}
+              >
+                Yes, Delete Image
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -1070,19 +1223,22 @@ NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
 
               <div className="admin-slots-grid">
                 {activeTab === 'portfolio' && activePortfolioProject !== 'covers' ? (
-                  Array.from({ length: 5 }).map((_, idx) => {
-                    const num = idx + 1;
-                    const slotId = `project_${activePortfolioProject}_gallery_${num}`;
-                    return (
-                      <ImageSlotCard
-                        key={slotId}
-                        slotId={slotId}
-                        label={`Gallery Image ${num}`}
-                        section={`${activePortfolioProject.replace(/-/g, ' ').toUpperCase()} GALLERY`}
-                        defaultSrc={`https://picsum.photos/seed/${activePortfolioProject}-gal${num}/1200/900`}
-                      />
-                    );
-                  })
+                  <>
+                    <ProjectTextDetailsForm slug={activePortfolioProject} />
+                    {Array.from({ length: 5 }).map((_, idx) => {
+                      const num = idx + 1;
+                      const slotId = `project_${activePortfolioProject}_gallery_${num}`;
+                      return (
+                        <ImageSlotCard
+                          key={slotId}
+                          slotId={slotId}
+                          label={`Gallery Image ${num}`}
+                          section={`${activePortfolioProject.replace(/-/g, ' ').toUpperCase()} GALLERY`}
+                          defaultSrc={`https://picsum.photos/seed/${activePortfolioProject}-gal${num}/1200/900`}
+                        />
+                      );
+                    })}
+                  </>
                 ) : (
                   filteredSlots.map((slot) => (
                     <ImageSlotCard
