@@ -52,10 +52,14 @@ export async function uploadToCloudinary(
   let uploadPreset = '';
   if (dynamicUploadPreset) {
     uploadPreset = dynamicUploadPreset;
-  } else if (envUploadPreset && envUploadPreset !== 'jay_interiors_upload') {
-    uploadPreset = envUploadPreset;
+  } else if (envUploadPreset) {
+    if (cloudName === 'doy3h1jvx' && envUploadPreset === 'jay_interiors_upload') {
+      uploadPreset = 'jay_interiors';
+    } else {
+      uploadPreset = envUploadPreset;
+    }
   } else {
-    uploadPreset = 'jay_interiors';
+    uploadPreset = cloudName === 'doy3h1jvx' ? 'jay_interiors' : 'jay_interiors_upload';
   }
 
   const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
