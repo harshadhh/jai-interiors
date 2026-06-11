@@ -1,11 +1,5 @@
 'use client';
 
-/**
- * ManagedImage — Drop-in replacement for Next.js <Image>
- * Reads the current URL from the localStorage image store (with reactive updates).
- * Falls back to `defaultSrc` if no Cloudinary override is set.
- */
-
 import Image, { ImageProps } from 'next/image';
 import { useImageUrl } from '@/hooks/useImageStore';
 import { useState } from 'react';
@@ -16,9 +10,17 @@ type ManagedImageProps = Omit<ImageProps, 'src'> & {
   defaultSrc: string;
 };
 
-export function ManagedImage({ slotId, defaultSrc, alt, className, ...rest }: ManagedImageProps) {
+export function ManagedImage({ slotId, defaultSrc, alt, className, style, ...rest }: ManagedImageProps) {
   const src = useImageUrl(slotId, defaultSrc);
+  const [prevSrc, setPrevSrc] = useState(src);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // Adjust state during render if src changes to avoid effect warnings and layout flash
+  if (src !== prevSrc) {
+    setPrevSrc(src);
+    setIsLoaded(false);
+  }
+
 
   return (
     <div className="relative w-full h-full bg-charcoal/10 overflow-hidden">
@@ -32,9 +34,14 @@ export function ManagedImage({ slotId, defaultSrc, alt, className, ...rest }: Ma
           isLoaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.02] blur-sm",
           className
         )}
+        style={{
+          opacity: isLoaded ? undefined : 0,
+          ...style,
+        }}
         {...rest}
       />
     </div>
   );
 }
+
 
