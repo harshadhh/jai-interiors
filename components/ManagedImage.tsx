@@ -25,6 +25,7 @@ export function ManagedImage({ slotId, defaultSrc, alt, className, style, ...res
   return (
     <div className="relative w-full h-full bg-charcoal/10 overflow-hidden">
       <Image
+        key={src}
         src={src}
         alt={alt}
         referrerPolicy="no-referrer"
@@ -35,8 +36,8 @@ export function ManagedImage({ slotId, defaultSrc, alt, className, style, ...res
           className
         )}
         style={{
-          opacity: isLoaded ? undefined : 0,
           ...style,
+          opacity: isLoaded ? undefined : 0,
         }}
         {...rest}
       />
