@@ -3,7 +3,9 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { ManagedImage } from '@/components/ManagedImage';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { useConfigSetting } from '@/hooks/useConfigStore';
 
 const categories = ['All', 'Residential', 'Kitchens', 'Living Spaces', 'Commercial'];
 
@@ -18,10 +20,213 @@ const projects = [
   { id: 8, slug: 'studio-black', slotId: 'portfolio_8', title: 'Studio Black', client: 'Pune CBD', category: 'Commercial', year: '2022', area: '950 sq ft', src: 'https://picsum.photos/seed/studioblk/800/700', featured: false },
 ];
 
+function ProjectGridCard({ project, index, onOpen }: { project: any; index: number; onOpen: () => void }) {
+  const title = useConfigSetting(`project_${project.slug}_title`, project.title);
+  const client = useConfigSetting(`project_${project.slug}_client`, project.client);
+  const category = useConfigSetting(`project_${project.slug}_category`, project.category);
+  const year = useConfigSetting(`project_${project.slug}_year`, project.year);
+
+  return (
+    <motion.div
+      layout
+      style={{ marginTop: index % 3 === 1 ? '3rem' : 0 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: index * 0.08 }}
+    >
+      <button
+        onClick={onOpen}
+        className="w-full block relative group overflow-hidden cursor-none text-left magnetic-target"
+      >
+        <div className={`relative overflow-hidden ${project.featured ? 'aspect-[3/4]' : 'aspect-[4/5]'}`}>
+          <ManagedImage
+            slotId={project.slotId} defaultSrc={project.src} alt={title} fill
+            className="object-cover opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent" />
+
+          {project.featured && (
+            <div className="absolute top-4 left-4 bg-brass text-charcoal text-[9px] uppercase tracking-widest px-3 py-1 font-bold">
+              Featured
+            </div>
+          )}
+        </div>
+
+        {/* Info — always visible */}
+        <div className="absolute bottom-0 left-0 right-0 p-6">
+          <div className="flex justify-between items-end">
+            <div>
+              <p className="text-[9px] uppercase tracking-widest text-brass mb-2">{category} · {year}</p>
+              <h3 className="text-xl md:text-2xl font-serif italic">{title}</h3>
+              <p className="text-xs opacity-50 mt-1 font-sans tracking-wider">{client}</p>
+            </div>
+            <span className="text-[9px] uppercase tracking-widest opacity-40 group-hover:opacity-100 group-hover:text-brass transition-all duration-500 pb-1">
+              View Gallery →
+            </span>
+          </div>
+        </div>
+      </button>
+    </motion.div>
+  );
+}
+
+function GalleryModal({
+  activeProject,
+  currentImageIndex,
+  setCurrentImageIndex,
+  onClose,
+}: {
+  activeProject: any;
+  currentImageIndex: number;
+  setCurrentImageIndex: React.Dispatch<React.SetStateAction<number>>;
+  onClose: () => void;
+}) {
+  const slug = activeProject.slug;
+  const title = useConfigSetting(`project_${slug}_title`, activeProject.title);
+  const client = useConfigSetting(`project_${slug}_client`, activeProject.client);
+  const category = useConfigSetting(`project_${slug}_category`, activeProject.category);
+  const year = useConfigSetting(`project_${slug}_year`, activeProject.year);
+  const area = useConfigSetting(`project_${slug}_area`, activeProject.area);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100000] bg-charcoal/98 backdrop-blur-md flex flex-col justify-center items-center p-4 md:p-8 cursor-none magnetic-target gap-4 md:gap-6"
+      onClick={onClose}
+    >
+      {/* Top Bar */}
+      <div className="flex justify-between items-center z-10 w-full max-w-6xl" onClick={(e) => e.stopPropagation()}>
+        <div>
+          <p className="text-[10px] uppercase tracking-widest text-brass mb-1">
+            Project Gallery
+          </p>
+          <h2 className="font-serif italic text-xl md:text-2xl text-alabaster">
+            {title}
+          </h2>
+        </div>
+        <button 
+          onClick={onClose}
+          className="text-alabaster uppercase tracking-widest text-xs font-sans opacity-60 hover:opacity-100 transition-opacity"
+        >
+          Close ✕
+        </button>
+      </div>
+
+      {/* Slider Container */}
+      <div 
+        className="relative w-full max-w-6xl mx-auto aspect-[16/10] md:aspect-[16/9] max-h-[60vh] md:max-h-[70vh] flex items-center justify-center overflow-hidden border border-brass/10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentImageIndex}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 w-full h-full"
+          >
+            <ManagedImage
+              slotId={`project_${slug}_gallery_${currentImageIndex + 1}`}
+              defaultSrc={`https://picsum.photos/seed/${slug}-gal${currentImageIndex + 1}/1200/900`}
+              alt={`${title} Gallery ${currentImageIndex + 1}`}
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Prev Arrow */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentImageIndex((prev) => (prev === 0 ? 4 : prev - 1));
+          }}
+          className="absolute left-4 w-12 h-12 rounded-full bg-charcoal/80 border border-alabaster/10 flex items-center justify-center text-alabaster hover:border-brass hover:text-brass transition-all duration-300 z-10"
+        >
+          ←
+        </button>
+
+        {/* Next Arrow */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentImageIndex((prev) => (prev === 4 ? 0 : prev + 1));
+          }}
+          className="absolute right-4 w-12 h-12 rounded-full bg-charcoal/80 border border-alabaster/10 flex items-center justify-center text-alabaster hover:border-brass hover:text-brass transition-all duration-300 z-10"
+        >
+          →
+        </button>
+
+        {/* Counter Indicator */}
+        <div className="absolute top-4 right-4 bg-charcoal/70 border border-alabaster/10 px-3 py-1.5 text-[10px] tracking-widest uppercase z-10 text-alabaster">
+          {currentImageIndex + 1} / 5
+        </div>
+      </div>
+
+      {/* Bottom Bar: Indicators & Details */}
+      <div className="flex flex-col md:flex-row justify-between items-center w-full max-w-6xl gap-4 z-10" onClick={(e) => e.stopPropagation()}>
+        <div className="flex gap-2">
+          {Array.from({ length: 5 }).map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentImageIndex(idx)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                currentImageIndex === idx ? 'bg-brass scale-110' : 'bg-alabaster/20 hover:bg-alabaster/40'
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Metadata */}
+        <div className="text-center md:text-right text-alabaster/60 font-sans text-xs flex gap-6">
+          <div>
+            <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Client / Loc</span>
+            <span className="text-alabaster">{client}</span>
+          </div>
+          <div>
+            <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Category</span>
+            <span className="text-alabaster">{category}</span>
+          </div>
+          <div>
+            <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Year</span>
+            <span className="text-alabaster">{year}</span>
+          </div>
+          <div>
+            <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Area</span>
+            <span className="text-alabaster">{area}</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Portfolio() {
   const [active, setActive] = useState('All');
   const [activeGalleryProject, setActiveGalleryProject] = useState<any | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (activeGalleryProject) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [activeGalleryProject]);
 
   const filtered = active === 'All' ? projects : projects.filter(p => p.category === active);
 
@@ -78,50 +283,15 @@ export default function Portfolio() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {filtered.map((project, i) => (
-              <motion.div
+              <ProjectGridCard
                 key={project.id}
-                layout
-                style={{ marginTop: i % 3 === 1 ? '3rem' : 0 }}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: i * 0.08 }}
-              >
-                <button
-                  onClick={() => {
-                    setActiveGalleryProject(project);
-                    setCurrentImageIndex(0);
-                  }}
-                  className="w-full block relative group overflow-hidden cursor-none text-left magnetic-target"
-                >
-                  <div className={`relative overflow-hidden ${project.featured ? 'aspect-[3/4]' : 'aspect-[4/5]'}`}>
-                    <ManagedImage
-                      slotId={project.slotId} defaultSrc={project.src} alt={project.title} fill
-                      className="object-cover opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent" />
-
-                    {project.featured && (
-                      <div className="absolute top-4 left-4 bg-brass text-charcoal text-[9px] uppercase tracking-widest px-3 py-1 font-bold">
-                        Featured
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info — always visible */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <p className="text-[9px] uppercase tracking-widest text-brass mb-2">{project.category} · {project.year}</p>
-                        <h3 className="text-xl md:text-2xl font-serif italic">{project.title}</h3>
-                        <p className="text-xs opacity-50 mt-1 font-sans tracking-wider">{project.client}</p>
-                      </div>
-                      <span className="text-[9px] uppercase tracking-widest opacity-40 group-hover:opacity-100 group-hover:text-brass transition-all duration-500 pb-1">
-                        View Gallery →
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              </motion.div>
+                project={project}
+                index={i}
+                onOpen={() => {
+                  setActiveGalleryProject(project);
+                  setCurrentImageIndex(0);
+                }}
+              />
             ))}
           </div>
 
@@ -158,123 +328,21 @@ export default function Portfolio() {
       </section>
 
       {/* ── GALLERY MODAL ── */}
-      <AnimatePresence>
-        {activeGalleryProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[999] bg-charcoal/95 backdrop-blur-md flex flex-col justify-between p-6 md:p-12 cursor-none magnetic-target"
-            onClick={() => setActiveGalleryProject(null)}
-          >
-            {/* Top Bar */}
-            <div className="flex justify-between items-center z-10 w-full" onClick={(e) => e.stopPropagation()}>
-              <div>
-                <p className="text-[10px] uppercase tracking-widest text-brass mb-1">
-                  Project Gallery
-                </p>
-                <h2 className="font-serif italic text-xl md:text-2xl text-alabaster">
-                  {activeGalleryProject.title}
-                </h2>
-              </div>
-              <button 
-                onClick={() => setActiveGalleryProject(null)}
-                className="text-alabaster uppercase tracking-widest text-xs font-sans opacity-60 hover:opacity-100 transition-opacity"
-              >
-                Close ✕
-              </button>
-            </div>
-
-            {/* Slider Container */}
-            <div 
-              className="relative w-full max-w-5xl mx-auto aspect-[16/10] md:aspect-[16/9] flex items-center justify-center overflow-hidden border border-brass/10 my-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentImageIndex}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute inset-0 w-full h-full"
-                >
-                  <ManagedImage
-                    slotId={`project_${activeGalleryProject.slug}_gallery_${currentImageIndex + 1}`}
-                    defaultSrc={`https://picsum.photos/seed/${activeGalleryProject.slug}-gal${currentImageIndex + 1}/1200/900`}
-                    alt={`${activeGalleryProject.title} Gallery ${currentImageIndex + 1}`}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Prev Arrow */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentImageIndex((prev) => (prev === 0 ? 4 : prev - 1));
-                }}
-                className="absolute left-4 w-12 h-12 rounded-full bg-charcoal/80 border border-alabaster/10 flex items-center justify-center text-alabaster hover:border-brass hover:text-brass transition-all duration-300 z-10"
-              >
-                ←
-              </button>
-
-              {/* Next Arrow */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentImageIndex((prev) => (prev === 4 ? 0 : prev + 1));
-                }}
-                className="absolute right-4 w-12 h-12 rounded-full bg-charcoal/80 border border-alabaster/10 flex items-center justify-center text-alabaster hover:border-brass hover:text-brass transition-all duration-300 z-10"
-              >
-                →
-              </button>
-
-              {/* Counter Indicator */}
-              <div className="absolute top-4 right-4 bg-charcoal/70 border border-alabaster/10 px-3 py-1.5 text-[10px] tracking-widest uppercase z-10 text-alabaster">
-                {currentImageIndex + 1} / 5
-              </div>
-            </div>
-
-            {/* Bottom Bar: Indicators & Details */}
-            <div className="flex flex-col md:flex-row justify-between items-center w-full gap-6 z-10" onClick={(e) => e.stopPropagation()}>
-              <div className="flex gap-2">
-                {Array.from({ length: 5 }).map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentImageIndex(idx)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                      currentImageIndex === idx ? 'bg-brass scale-110' : 'bg-alabaster/20 hover:bg-alabaster/40'
-                    }`}
-                  />
-                ))}
-              </div>
-
-              {/* Metadata */}
-              <div className="text-center md:text-right text-alabaster/60 font-sans text-xs flex gap-6">
-                <div>
-                  <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Client / Loc</span>
-                  <span className="text-alabaster">{activeGalleryProject.client}</span>
-                </div>
-                <div>
-                  <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Category</span>
-                  <span className="text-alabaster">{activeGalleryProject.category}</span>
-                </div>
-                <div>
-                  <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Year</span>
-                  <span className="text-alabaster">{activeGalleryProject.year}</span>
-                </div>
-                <div>
-                  <span className="text-brass uppercase text-[9px] tracking-widest block mb-1">Area</span>
-                  <span className="text-alabaster">{activeGalleryProject.area}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mounted && typeof window !== 'undefined' && document.body
+        ? createPortal(
+            <AnimatePresence>
+              {activeGalleryProject && (
+                <GalleryModal
+                  activeProject={activeGalleryProject}
+                  currentImageIndex={currentImageIndex}
+                  setCurrentImageIndex={setCurrentImageIndex}
+                  onClose={() => setActiveGalleryProject(null)}
+                />
+              )}
+            </AnimatePresence>,
+            document.body
+          )
+        : null}
 
     </main>
   );
