@@ -56,6 +56,47 @@ const serviceCategories = [
 const hardwareBrands = ['Hettich', 'Blum', 'Grass', 'Hafele', 'Ebco'];
 
 
+function FeaturedProjectCard({
+  project,
+  index,
+}: {
+  project: { id: number; slotId: string; title: string; category: string; location: string; src: string; year: string };
+  index: number;
+}) {
+  const slugMap: Record<number, string> = {
+    1: 'the-penthouse',
+    2: 'villa-74',
+    3: 'glass-pavilion',
+  };
+  const slug = slugMap[project.id];
+  const title = useConfigSetting(`project_${slug}_title`, project.title);
+  const category = useConfigSetting(`project_${slug}_category`, project.category);
+  const client = useConfigSetting(`project_${slug}_client`, project.location);
+  const year = useConfigSetting(`project_${slug}_year`, project.year);
+
+  return (
+    <motion.div
+      className="relative group overflow-hidden cursor-none magnetic-target"
+      style={{ marginTop: index === 1 ? '3rem' : 0 }}
+      initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }} transition={{ duration: 0.9, delay: index * 0.15 }}
+    >
+      <div className="relative aspect-[3/4] overflow-hidden">
+        <ManagedImage
+          slotId={project.slotId} defaultSrc={project.src} alt={title} fill
+          className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent" />
+      </div>
+      <div className="absolute bottom-0 left-0 p-6">
+        <p className="text-[10px] uppercase tracking-widest text-brass mb-2">{category} · {year}</p>
+        <h3 className="text-2xl font-serif italic">{title}</h3>
+        <p className="text-xs opacity-50 mt-1 font-sans tracking-wider">{client}</p>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef });
@@ -151,7 +192,7 @@ export default function Home() {
       </section>
 
       {/* ── TRUST STRIP (PARTNERS & HARDWARE) ── */}
-      <section className="bg-alabaster border-y border-charcoal/10 py-8 px-6 overflow-hidden">
+      <section className="bg-charcoal/50 border-y border-alabaster/10 py-8 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 opacity-60">
           <p className="text-[10px] uppercase tracking-widest font-sans whitespace-nowrap hidden md:block">
             Engineered With The World&apos;s Best
@@ -343,26 +384,11 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-6 items-start">
             {featuredProjects.map((project, i) => (
-              <motion.div
+              <FeaturedProjectCard
                 key={project.id}
-                className="relative group overflow-hidden cursor-none magnetic-target"
-                style={{ marginTop: i === 1 ? '3rem' : 0 }}
-                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.9, delay: i * 0.15 }}
-              >
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  <ManagedImage
-                    slotId={project.slotId} defaultSrc={project.src} alt={project.title} fill
-                    className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent" />
-                </div>
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="text-[10px] uppercase tracking-widest text-brass mb-2">{project.category} · {project.year}</p>
-                  <h3 className="text-2xl font-serif italic">{project.title}</h3>
-                  <p className="text-xs opacity-50 mt-1 font-sans tracking-wider">{project.location}</p>
-                </div>
-              </motion.div>
+                project={project}
+                index={i}
+              />
             ))}
           </div>
 
