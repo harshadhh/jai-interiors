@@ -99,7 +99,7 @@ export default function About() {
           >
             <ManagedImage
               slotId="about_hero_founders"
-              defaultSrc="https://picsum.photos/seed/founders-team/800/1000"
+              defaultSrc=''
               alt="Jay Interiors — Dev & Suresh, Founders"
               fill
               priority
@@ -134,7 +134,7 @@ export default function About() {
               <div className="relative aspect-[4/3] overflow-hidden">
                 <ManagedImage
                   slotId="about_dev_portrait"
-                  defaultSrc="https://picsum.photos/seed/dev-founder/900/700"
+                  defaultSrc=''
                   alt="Dev — Principal Architect & Creative Director"
                   fill className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000"
                 />
@@ -158,7 +158,7 @@ export default function About() {
               <div className="relative aspect-[4/3] overflow-hidden">
                 <ManagedImage
                   slotId="about_suresh_portrait"
-                  defaultSrc="https://picsum.photos/seed/suresh-founder/900/700"
+                  defaultSrc=''
                   alt="Suresh — Senior Interior Designer & Project Director"
                   fill className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000"
                 />
@@ -247,7 +247,7 @@ export default function About() {
           <div className="relative aspect-square md:aspect-[4/5] overflow-hidden">
             <ManagedImage 
               slotId="about_workshop"
-              defaultSrc="https://picsum.photos/seed/workshop1/800/1000"
+              defaultSrc=''
               alt="Jay Interiors Workshop" 
               fill className="object-cover" 
             />
