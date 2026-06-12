@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { uploadToCloudinary, validateImageFile, type UploadProgress } from '@/lib/cloudinary';
 import { setImage, resetImage, getImage, resetAllImages } from '@/lib/imageStore';
@@ -295,14 +294,20 @@ function ImageSlotCard({
     progress: 0,
     errorMessage: '',
     isDragging: false,
-    currentUrl: typeof window !== 'undefined' ? getImage(slotId, defaultSrc) : defaultSrc,
+    currentUrl: defaultSrc,
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Keep in sync with external store updates
+  // Keep in sync with external store updates and initialize on mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setState((prev) => ({
+      ...prev,
+      currentUrl: getImage(slotId, defaultSrc),
+    }));
+
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail.slotId === slotId || detail.slotId === '*') {
@@ -315,9 +320,7 @@ function ImageSlotCard({
     };
     window.addEventListener('jay-image-update', handler);
     return () => window.removeEventListener('jay-image-update', handler);
-  }, [slotId, defaultSrc]);
-
-  const processFile = useCallback(
+  }, [slotId, defaultSrc]);  const processFile = useCallback(
     async (file: File) => {
       const validation = validateImageFile(file);
       if (!validation.valid) {
@@ -397,13 +400,10 @@ function ImageSlotCard({
       {/* Current Image Preview */}
       <div className="admin-preview-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
         {state.currentUrl ? (
-          <Image
-            key={state.currentUrl}
+          <img
             src={state.currentUrl}
             alt={label}
-            fill
-            className="admin-preview-img"
-            unoptimized
+            className="admin-preview-img w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
         ) : (
@@ -596,19 +596,20 @@ export default function AdminPage() {
   const [passChangeSuccess, setPassChangeSuccess] = useState(false);
 
   // Logo state for Admin Topbar
-  const [logoUrl, setLogoUrl] = useState(() => typeof window !== 'undefined' ? getImage('site_logo', '') : '');
+  const [logoUrl, setLogoUrl] = useState('');
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handler = (e: Event) => {
-        const detail = (e as CustomEvent).detail;
-        if (detail.slotId === 'site_logo' || detail.slotId === '*') {
-          setLogoUrl(detail.url || '');
-        }
-      };
-      window.addEventListener('jay-image-update', handler);
-      return () => window.removeEventListener('jay-image-update', handler);
-    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLogoUrl(getImage('site_logo', ''));
+
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail.slotId === 'site_logo' || detail.slotId === '*') {
+        setLogoUrl(detail.url || '');
+      }
+    };
+    window.addEventListener('jay-image-update', handler);
+    return () => window.removeEventListener('jay-image-update', handler);
   }, []);
 
   // Load basic configurations
