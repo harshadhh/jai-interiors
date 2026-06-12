@@ -9,21 +9,21 @@ const finishes = [
   {
     name: 'Acrylic',
     desc: 'High-gloss mirror finish that reflects light beautifully. Scratch-resistant, easy-to-clean, and available in 200+ colours. The premium choice for modern kitchens.',
-    img: 'https://picsum.photos/seed/acrylic-finish/600/400',
+    img: '',
     slotId: 'kitchen_finish_acrylic',
     badge: 'Most Popular',
   },
   {
     name: 'Laminate',
     desc: 'Durable, versatile and cost-effective. Available in wood grain, solid colour and textured finishes. Excellent scratch and heat resistance for everyday Indian cooking.',
-    img: 'https://picsum.photos/seed/laminate-finish/600/400',
+    img: '',
     slotId: 'kitchen_finish_laminate',
     badge: 'Best Value',
   },
   {
     name: 'PU + Deco Finish',
     desc: 'Polyurethane finish offers a silky-smooth, paint-like surface with superior depth and sheen. Deco profiles add dimension and a European design sensibility.',
-    img: 'https://picsum.photos/seed/pu-finish/600/400',
+    img: '',
     slotId: 'kitchen_finish_pu',
     badge: 'Ultra Premium',
   },
@@ -75,7 +75,7 @@ export default function ModularKitchenPage() {
         <div className="absolute inset-0">
           <ManagedImage
             slotId="kitchen_hero_mk"
-            defaultSrc="https://picsum.photos/seed/kitchen-hero-mk/1920/1080"
+            defaultSrc=''
             alt="Modular Kitchen by Jay Interiors"
             fill priority className="object-cover opacity-40"
             unoptimized
