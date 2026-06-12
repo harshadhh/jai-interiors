@@ -37,9 +37,9 @@ const milestones = [
 ];
 
 const reviews = [
-  { author: 'Ananya Desai', stars: 5, text: 'Absolutely world-class. Dev personally visited every week to ensure quality. The kitchen they built for us is better than anything I\'ve seen in a 5-star hotel.' },
-  { author: 'Rajesh Kulkarni', stars: 5, text: 'Suresh has an incredible eye. He transformed a dark, cramped flat in Kalyani Nagar into the most open, luminous space you can imagine. Pure magic.' },
-  { author: 'Meera & Sachin Joshi', stars: 5, text: 'From the first concept meeting to final handover — seamless, professional, breathtaking. Jay Interiors is the gold standard.' },
+  { author: 'Tarun Jangir', stars: 5, text: 'Would recommend to complete your dream house with Devji & Sureshji... What an excellent work done by both of them. Without them our house couldn\'t be a better place to live. Thank you!' },
+  { author: 'Gayatri Katkade', stars: 5, text: 'Amazing work! The furniture looks beautiful and the craftsmanship is top-class. The team is also very cooperative… highly recommended!!' },
+  { author: 'Sandip Tarange', stars: 5, text: 'Work and design quality is excellent. We are satisfied. Best solutions are provided and suitable to our premises.' },
 ];
 
 export default function About() {
