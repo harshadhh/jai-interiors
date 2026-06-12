@@ -57,10 +57,10 @@ export function Footer() {
         <div className="md:col-span-1 flex flex-col gap-6">
           <Link href="/" className="magnetic-target cursor-none w-fit flex items-center gap-3 group">
             {logoUrl ? (
-              <div className="w-10 h-10 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0">
-                <img src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
-              </div>
-            ) : (
+               <div className="w-10 h-10 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0">
+                 <img key={logoUrl} src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
+               </div>
+             ) : (
               <div className="w-10 h-10 bg-brass flex items-center justify-center shrink-0">
                 <span className="text-charcoal font-serif font-bold text-sm">JI</span>
               </div>
