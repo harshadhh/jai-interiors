@@ -10,14 +10,14 @@ import { useConfigSetting } from '@/hooks/useConfigStore';
 const categories = ['All', 'Residential', 'Kitchens', 'Living Spaces', 'Commercial'];
 
 const projects = [
-  { id: 1, slug: 'the-penthouse', slotId: 'portfolio_1', title: 'The Penthouse', client: 'Baner Enclave', category: 'Residential', year: '2024', area: '4,200 sq ft', src: 'https://picsum.photos/seed/penth2/800/1000', featured: true },
-  { id: 2, slug: 'villa-74', slotId: 'portfolio_2', title: 'Villa 74', client: 'Koregaon Park', category: 'Residential', year: '2024', area: '3,600 sq ft', src: 'https://picsum.photos/seed/villa74b/800/800', featured: false },
-  { id: 3, slug: 'noir-studio-kitchen', slotId: 'portfolio_3', title: 'Noir Studio Kitchen', client: 'Kalyani Nagar', category: 'Kitchens', year: '2023', area: '580 sq ft', src: 'https://picsum.photos/seed/noirkitchen/1000/700', featured: false },
-  { id: 4, slug: 'glass-pavilion', slotId: 'portfolio_4', title: 'Glass Pavilion', client: 'Aundh', category: 'Living Spaces', year: '2023', area: '2,100 sq ft', src: 'https://picsum.photos/seed/pavilion2/600/900', featured: false },
-  { id: 5, slug: 'the-silk-suite', slotId: 'portfolio_5', title: 'The Silk Suite', client: 'Wakad', category: 'Residential', year: '2023', area: '2,800 sq ft', src: 'https://picsum.photos/seed/silksuite/800/1000', featured: false },
-  { id: 6, slug: 'matte-kitchen', slotId: 'portfolio_6', title: 'Matte Kitchen', client: 'Baner', category: 'Kitchens', year: '2022', area: '420 sq ft', src: 'https://picsum.photos/seed/mattekitch/800/700', featured: false },
-  { id: 7, slug: 'the-marble-loft', slotId: 'portfolio_7', title: 'The Marble Loft', client: 'Viman Nagar', category: 'Living Spaces', year: '2022', area: '1,800 sq ft', src: 'https://picsum.photos/seed/marbleloft/900/1100', featured: true },
-  { id: 8, slug: 'studio-black', slotId: 'portfolio_8', title: 'Studio Black', client: 'Pune CBD', category: 'Commercial', year: '2022', area: '950 sq ft', src: 'https://picsum.photos/seed/studioblk/800/700', featured: false },
+  { id: 1, slug: 'the-penthouse', slotId: 'portfolio_1', title: 'The Penthouse', client: 'Baner Enclave', category: 'Residential', year: '2024', area: '4,200 sq ft', src: '', featured: true },
+  { id: 2, slug: 'villa-74', slotId: 'portfolio_2', title: 'Villa 74', client: 'Koregaon Park', category: 'Residential', year: '2024', area: '3,600 sq ft', src: '', featured: false },
+  { id: 3, slug: 'noir-studio-kitchen', slotId: 'portfolio_3', title: 'Noir Studio Kitchen', client: 'Kalyani Nagar', category: 'Kitchens', year: '2023', area: '580 sq ft', src: '', featured: false },
+  { id: 4, slug: 'glass-pavilion', slotId: 'portfolio_4', title: 'Glass Pavilion', client: 'Aundh', category: 'Living Spaces', year: '2023', area: '2,100 sq ft', src: '', featured: false },
+  { id: 5, slug: 'the-silk-suite', slotId: 'portfolio_5', title: 'The Silk Suite', client: 'Wakad', category: 'Residential', year: '2023', area: '2,800 sq ft', src: '', featured: false },
+  { id: 6, slug: 'matte-kitchen', slotId: 'portfolio_6', title: 'Matte Kitchen', client: 'Baner', category: 'Kitchens', year: '2022', area: '420 sq ft', src: '', featured: false },
+  { id: 7, slug: 'the-marble-loft', slotId: 'portfolio_7', title: 'The Marble Loft', client: 'Viman Nagar', category: 'Living Spaces', year: '2022', area: '1,800 sq ft', src: '', featured: true },
+  { id: 8, slug: 'studio-black', slotId: 'portfolio_8', title: 'Studio Black', client: 'Pune CBD', category: 'Commercial', year: '2022', area: '950 sq ft', src: '', featured: false },
 ];
 
 function ProjectGridCard({ project, index, onOpen }: { project: any; index: number; onOpen: () => void }) {
@@ -130,7 +130,7 @@ function GalleryModal({
           >
             <ManagedImage
               slotId={`project_${slug}_gallery_${currentImageIndex + 1}`}
-              defaultSrc={`https://picsum.photos/seed/${slug}-gal${currentImageIndex + 1}/1200/900`}
+              defaultSrc={''}
               alt={`${title} Gallery ${currentImageIndex + 1}`}
               fill
               className="object-cover"
