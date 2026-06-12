@@ -54,10 +54,10 @@ export function Navigation() {
           >
             {/* Logo Space */}
             {logoUrl ? (
-              <div className="w-9 h-9 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0 group-hover:scale-105 transition-transform duration-300">
-                <img src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
-              </div>
-            ) : (
+               <div className="w-9 h-9 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0 group-hover:scale-105 transition-transform duration-300">
+                 <img key={logoUrl} src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
+               </div>
+             ) : (
               <div className="w-9 h-9 bg-brass flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <span className="text-charcoal font-serif font-bold text-sm tracking-tighter">JI</span>
               </div>
