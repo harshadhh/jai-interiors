@@ -1,475 +1,579 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ManagedImage } from '@/components/ManagedImage';
+import { getImage } from '@/lib/imageStore';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRef } from 'react';
-import { BeforeAfterSlider } from '@/components/BeforeAfterSlider';
-import { useConfigSetting } from '@/hooks/useConfigStore';
 
-const stats = [
-  { value: '12+', label: 'Years of Excellence' },
-  { value: '200+', label: 'Projects Delivered' },
-  { value: '45 Days', label: 'Handover Guarantee' },
-  { value: '10 Yrs', label: 'Furniture Warranty' },
-];
-
-const featuredProjects = [
-  { id: 1, slotId: 'featured_1', title: 'The Penthouse', category: 'Luxury Residential', location: 'Baner Enclave, Pune', src: 'https://picsum.photos/seed/penth1/900/1200', year: '2024' },
-  { id: 2, slotId: 'featured_2', title: 'Villa 74', category: 'Modular Kitchen', location: 'Koregaon Park, Pune', src: 'https://picsum.photos/seed/villa74x/900/1200', year: '2024' },
-  { id: 3, slotId: 'featured_3', title: 'Glass Pavilion', category: 'Fall & Ceiling', location: 'Aundh, Pune', src: 'https://picsum.photos/seed/glasspav1/900/1200', year: '2023' },
-];
-
-const testimonials = [
+const services = [
   {
-    quote: "Jay Interiors transformed our Baner apartment into a masterpiece. Every corner feels intentional, every material feels flawless. We get compliments every single day.",
-    author: "Priya & Rohit Sharma",
-    project: "The Whitefield Residence, Baner",
+    id: '01',
+    title: 'Modular Kitchen',
+    tagline: 'Europe-grade kitchens. 10-year warranty.',
+    image: 'https://picsum.photos/seed/modular-kitchen/1920/1080',
+    desc: 'Our modular kitchen division is the crown of Jay Interiors. We offer fully customised kitchen solutions using European hardware (Hettich, Blum, Grass) with a 10-year furniture warranty. From Acrylic to Lacquered PU finishes — every kitchen is engineered for Indian cooking and designed for luxury living.',
+    items: [
+      { name: 'Tandems', detail: 'Acrylic Sheets · Laminate Sheets · PU + Deco Finish' },
+      { name: 'SS Stainless Trollies', detail: 'Acrylic · Laminate · PU + Deco Finish' },
+      { name: 'Wicker Baskets', detail: 'Premium natural wicker storage inserts' },
+      { name: 'Pantry Unit', detail: 'Pull-out larder with full-extension soft-close runners' },
+      { name: 'Rolling Shutter', detail: 'Aluminium tambour rolling shutters for tall units' },
+      { name: 'Tall Unit', detail: 'Floor-to-ceiling storage towers' },
+      { name: 'Crockery Cabinet with Glass', detail: 'Fluted · Clear · Black Tinted · Frosted — with hydraulic bar / hinges' },
+      { name: 'Loft', detail: 'Overhead storage with soft-close hydraulic lift' },
+      { name: 'Platform Tops', detail: 'Quartz · Granite — imported & premium domestic' },
+    ],
+    includes: ['10-Year Furniture Warranty', 'European hardware (Hettich / Blum / Grass)', 'Full 3D design before fabrication', '45-Day delivery guarantee', 'On-site installation & handover'],
   },
   {
-    quote: "Dev and Suresh have an extraordinary eye for detail. They understood our vision better than we did. The modular kitchen they designed is simply unparalleled.",
-    author: "Ankur Mehta",
-    project: "Villa 74, Koregaon Park",
+    id: '02',
+    title: 'Kitchen Accessories',
+    tagline: 'Smart storage. Effortless organisation.',
+    image: 'https://picsum.photos/seed/kitchen-acc/1920/1080',
+    desc: 'The difference between a good kitchen and a great one lies in the accessories. We source and install the finest functional hardware — from magic corners to pull-down basket elevators — making every inch of your kitchen work smarter.',
+    items: [
+      { name: 'Handles', detail: 'Profile, bow, bar, flush & edge-pull in matte black, gold & SS' },
+      { name: 'Magic Corner', detail: 'Full-extension magic corner with soft-stop mechanism' },
+      { name: 'Pantry Pull-Out Larder', detail: 'Tall pull-out with adjustable shelves & wire baskets' },
+      { name: 'Masala Pull-Out', detail: 'Spice drawer system with 20+ jars capacity' },
+      { name: 'DBR Pull-Down Basket Elevator', detail: 'Lift-up basket system for overhead cabinets' },
+    ],
+    includes: ['Brand: Hettich / Blum / Ebco / Hafele', 'Soft-close on all drawers', 'Anti-slam mechanisms', 'Lifetime mechanism warranty'],
   },
   {
-    quote: "Working with Jay Interiors was the best decision we made for our home. Their craftsmanship is world-class and the result is beyond anything we imagined.",
-    author: "Sneha & Vikram Kulkarni",
-    project: "The Terrace Penthouse, Kalyani Nagar",
+    id: '03',
+    title: 'Bedroom',
+    tagline: 'Rest. Restore. Reimagine your sanctuary.',
+    image: 'https://picsum.photos/seed/bedroom-svc/1920/1080',
+    desc: 'Your bedroom is your most personal space. We design complete bedroom solutions — from custom beds and wardrobes to study nooks and wall décor — ensuring every element is tailored to your lifestyle and aesthetic. With our end-to-end furniture approach and 10-year warranty, your bedroom is built to last.',
+    items: [
+      { name: 'Hydraulic Bed', detail: 'Storage bed with gas-lift mechanism — Queen & King sizes' },
+      { name: 'Drawer Bed', detail: 'Under-bed drawer storage system in laminate & lacquer finishes' },
+      { name: 'Wall Mounted Bed', detail: 'Floating bed frames with integrated headboard lighting' },
+      { name: 'Side Tables', detail: 'Matching bedside tables — floating or freestanding' },
+      { name: 'Foam Headboard', detail: 'Custom upholstered foam headboards in fabric / leatherette' },
+      { name: 'Wardrobe', detail: 'Drawers · Cloth hanging · Inbuilt dressing mirror · Organisers · Iron board compartment' },
+      { name: 'Wall Décor', detail: 'Panelling, fluted panels, PU wall art & custom murals' },
+      { name: 'Study Table', detail: 'Integrated study unit with bookshelf & cable management' },
+      { name: 'Loft', detail: 'Overhead loft storage with flush shutters' },
+      { name: 'Book Rack', detail: 'Open shelving unit — wall mounted or freestanding' },
+    ],
+    includes: ['10-Year Furniture Warranty', 'Custom size manufacturing', 'In-house upholstery team', 'Complete room coordination'],
+  },
+  {
+    id: '04',
+    title: 'Living Room',
+    tagline: 'The heart of your home. Reimagined.',
+    image: 'https://picsum.photos/seed/living-svc/1920/1080',
+    desc: 'The living room is where life unfolds — family gatherings, quiet evenings, first impressions. We design every element of this space with cinematic attention to detail, from the TV wall to the ceiling, creating a space that feels alive at every hour.',
+    items: [
+      { name: 'TV Unit', detail: 'With louvers, back-lit panels, fluted glass inserts & cove lighting' },
+      { name: 'Mandir', detail: 'Traditional & contemporary pooja units — wood, CNC jali & marble' },
+      { name: 'Sofa Set', detail: 'Custom L-shaped, sectional & modular sofas in fabric / leatherette' },
+      { name: 'Back Wall Décor', detail: 'Feature wall — panelling, wallpaper, stone cladding & lighting' },
+      { name: 'False Ceiling', detail: 'Gypsum false ceiling with cove lighting, POP & profiles' },
+      { name: 'Partition', detail: 'CNC jali, glass, wooden slat & fluted partitions' },
+      { name: 'Dining Table', detail: 'Folding dining table · Wall-mounted drop-leaf · Fixed custom' },
+    ],
+    includes: ['Complete room 3D design', 'Lighting plan included', 'Soft furnishings coordination', 'Fall & ceiling integration'],
+  },
+  {
+    id: '05',
+    title: 'Entrance Design',
+    tagline: 'First impressions are everything.',
+    image: 'https://picsum.photos/seed/entrance-svc/1920/1080',
+    desc: 'The entrance to your home is your personal statement to the world. We design entrance areas that are dramatic, functional, and unmistakably curated — from the main door to the foyer wall and beyond.',
+    items: [
+      { name: 'Wall Panelling', detail: 'Fluted, ribbed, leather-look & stone-effect panels' },
+      { name: 'Shoe Rack', detail: 'Built-in shoe storage — concealed, open & turnstile designs' },
+      { name: 'Safety Door with Digital Lock', detail: 'Mild steel safety doors with smart digital lock systems' },
+      { name: 'CNC Jali', detail: 'Laser-cut MDF & MS jali screens — custom patterns' },
+      { name: 'Name Plates', detail: 'Backlit acrylic, SS & brass name plates — custom designed' },
+      { name: 'Main Door', detail: 'Solid wood, fibre, steel & composite main doors — custom crafted' },
+    ],
+    includes: ['Concept to installation', 'Custom design options', 'Digital lock integration', 'Branded hardware'],
+  },
+  {
+    id: '06',
+    title: 'Balcony',
+    tagline: 'Your outdoor escape. Designed with care.',
+    image: 'https://picsum.photos/seed/balcony-svc/1920/1080',
+    desc: 'Balconies are often the most neglected space in Indian homes. We transform them into premium outdoor retreats — weather-resistant, stylish, and functional — with PVC ceiling systems that are both beautiful and durable.',
+    items: [
+      { name: 'PVC Ceiling', detail: 'Premium PVC false ceiling — weather-resistant, anti-fungal, easy-clean' },
+    ],
+    includes: ['Waterproofing consultation', 'Weather-resistant materials', 'Concealed lighting integration', 'Low-maintenance finishes'],
+  },
+  {
+    id: '07',
+    title: 'Wallpapers',
+    tagline: 'Your walls, your story.',
+    image: 'https://picsum.photos/seed/wallpaper-svc/1920/1080',
+    desc: 'Wallpapers are the quickest way to transform a room. We offer fully custom-designed wallpapers — from photomurals and geometric prints to textured and metallic finishes — printed and installed to perfection.',
+    items: [
+      { name: 'Custom Designed Wallpapers', detail: 'Photomural · Geometric · Floral · Abstract · Textured · Metallic' },
+    ],
+    includes: ['Custom design service', 'Premium imported materials', 'Professional installation', 'Free samples before order'],
+  },
+  {
+    id: '08',
+    title: 'Tiles',
+    tagline: 'Surfaces that define the space.',
+    image: 'https://picsum.photos/seed/tiles-svc/1920/1080',
+    desc: 'The right tile can transform a bathroom, kitchen, or living space from ordinary to extraordinary. We source and supply premium tiles — from large-format full body to handcrafted marble — and handle installation with millimetre precision.',
+    items: [
+      { name: 'Full Body Tiles', detail: 'Large format 800×1600, 1200×2400 — matte, glossy, textured' },
+      { name: 'Ceramic Tiles', detail: 'Wall & floor ceramics for kitchens, bathrooms & balconies' },
+      { name: 'Marbles', detail: 'Italian & Indian marble — Statuario, Carrara, Makrana & more' },
+    ],
+    includes: ['Supply & installation', 'Waterproofing included', 'Grout colour selection', 'Surplus management'],
+  },
+  {
+    id: '09',
+    title: 'Lighting Design',
+    tagline: 'Light is the most powerful design element.',
+    image: 'https://picsum.photos/seed/light-svc/1920/1080',
+    desc: 'We treat lighting as a living material. Our lighting design service creates layered systems — ambient, accent, task, and dramatic — that sculpt the mood of every space at every hour. We specify, source, and install complete lighting ecosystems tailored to your lifestyle.',
+    items: [
+      { name: 'Panel Lights', detail: 'Surface-mounted panels · Recessed rectangle panels' },
+      { name: 'Profile Lights', detail: 'Aluminium LED profile strips — warm white & CCT tunable' },
+      { name: 'Magnetic Lights', detail: 'Modular magnetic track-based adjustable spotlights' },
+      { name: 'Spot Lights', detail: 'Recessed & surface spots in fixed and gimbal designs' },
+      { name: 'Track Lights', detail: 'Single & three-circuit tracks for kitchen & feature areas' },
+      { name: 'Cove Lights', detail: 'Concealed LED cove lighting for false ceiling ambiance' },
+    ],
+    includes: ['Full lighting plan & zoning', 'Ambient, accent & task layers', 'Smart dimmer integration', 'Chandelier & statement fixture sourcing'],
+  },
+  {
+    id: '10',
+    title: 'Civil Work',
+    tagline: 'Solid foundations. Flawless finishes.',
+    image: 'https://picsum.photos/seed/civil-svc/1920/1080',
+    desc: 'Great interiors demand great civil work underneath. Our civil team handles all structural and finishing work in-house — ensuring seamless integration with the interior design. No subcontracting, no surprises.',
+    items: [
+      { name: 'Painting', detail: 'Interior & exterior — textured, smooth, luxury emulsion & enamel' },
+      { name: 'Plumbing', detail: 'New installations, repairs & upgrades — CP fittings to concealed systems' },
+    ],
+    includes: ['In-house civil team', 'Premium paint brands', 'Waterproofing treatments', 'Snagging & touch-up included'],
+  },
+  {
+    id: '11',
+    title: 'Commercial Spaces',
+    tagline: 'Spaces that work as hard as you do.',
+    image: 'https://picsum.photos/seed/commercial-svc/1920/1080',
+    desc: 'Commercial interiors require a different lens — function-first, brand-aligned, and built to impress clients. We design offices, shops, and mall spaces that boost productivity, attract customers, and reflect your brand identity.',
+    items: [
+      { name: 'Office Work', detail: 'Workstations, cabins, reception, conference rooms & pantries' },
+      { name: 'Shop', detail: 'Retail fit-outs — display systems, billing counters & signage' },
+      { name: 'Mall', detail: 'Large-scale commercial kiosks, brand stores & food courts' },
+    ],
+    includes: ['Brand identity integration', 'Ergonomic workspace planning', 'Commercial-grade materials', 'Fast-track delivery'],
   },
 ];
 
-const serviceCategories = [
-  { icon: '🍳', title: 'Modular Kitchen', desc: 'Acrylic, Laminate & PU Deco finishes. SS trollies, pantry units & crockery cabinets.', color: 'from-amber-900/20' },
-  { icon: '🛏️', title: 'Bedroom', desc: 'Hydraulic beds, wardrobes with organisers, study tables, wall décor & lofts.', color: 'from-slate-800/20' },
-  { icon: '🛋️', title: 'Living Room', desc: 'TV units with louvers, mandir, false ceiling, partition & dining setups.', color: 'from-stone-800/20' },
-  { icon: '🚪', title: 'Entrance Design', desc: 'Wall panelling, safety doors with digital locks, CNC jali & custom name plates.', color: 'from-zinc-800/20' },
-  { icon: '🌿', title: 'Balcony', desc: 'Premium PVC ceiling & outdoor finishing for your private outdoor retreat.', color: 'from-green-900/20' },
-  { icon: '🎨', title: 'Wallpapers', desc: 'Custom designed wallpapers tailored to your unique aesthetic vision.', color: 'from-purple-900/20' },
-  { icon: '⬜', title: 'Tiles', desc: 'Full body tiles, ceramic tiles & marble — imported and premium domestic.', color: 'from-gray-800/20' },
-  { icon: '💡', title: 'Lighting', desc: 'Panel, profile, magnetic, spot, track & cove lights — layered atmospheres.', color: 'from-yellow-900/20' },
-  { icon: '🔨', title: 'Civil Work', desc: 'Professional painting & plumbing services integrated into every project.', color: 'from-orange-900/20' },
-  { icon: '🏢', title: 'Commercial', desc: 'Office fit-outs, shop interiors & mall spaces designed to impress.', color: 'from-blue-900/20' },
-  { icon: '📐', title: 'Fall & Ceiling', desc: 'Engineered false ceilings, cove lighting grids & volumetric space planning.', color: 'from-indigo-900/20' },
-  { icon: '🔧', title: 'Renovation', desc: 'Full home & room renovation — from concept to completion in 45 days.', color: 'from-red-900/20' },
+const process = [
+  { step: '01', title: 'Discovery', desc: 'A deep-dive consultation at your space. We understand your lifestyle, aspirations, and the emotion you want your home to evoke.' },
+  { step: '02', title: 'Design', desc: 'We create a complete design concept — mood boards, 3D renders, material palettes — for your approval before a single nail is placed.' },
+  { step: '03', title: 'Execution', desc: 'Our in-house craftsmen and verified contractors bring the design to life under meticulous supervision. Daily updates, zero surprises.' },
+  { step: '04', title: 'Handover', desc: 'A final walkthrough, punch-list sign-off, and 10-year furniture warranty. Your extraordinary space is yours in 45 days.' },
 ];
 
-const hardwareBrands = ['Hettich', 'Blum', 'Grass', 'Hafele', 'Ebco'];
+const differentiators = [
+  { title: 'In-House Craftsmen', desc: 'We do not outsource fabrication. Our workshop team ensures every joint, finish, and detail meets our exacting standards.' },
+  { title: 'Fixed-Price Contracts', desc: 'No hidden costs, no scope creep. Your agreed budget is your final budget. This is our non-negotiable promise.' },
+  { title: '5.0 Google Rating', desc: "Over 80 verified five-star reviews from Pune's most discerning homeowners. Our reputation is our greatest asset." },
+  { title: '10-Year Warranty', desc: 'Every furniture piece comes with a full 10-year warranty. We stand behind our work, unconditionally.' },
+];
 
-
-function FeaturedProjectCard({
-  project,
-  index,
-}: {
-  project: { id: number; slotId: string; title: string; category: string; location: string; src: string; year: string };
-  index: number;
-}) {
-  const slugMap: Record<number, string> = {
-    1: 'the-penthouse',
-    2: 'villa-74',
-    3: 'glass-pavilion',
-  };
-  const slug = slugMap[project.id];
-  const title = useConfigSetting(`project_${slug}_title`, project.title);
-  const category = useConfigSetting(`project_${slug}_category`, project.category);
-  const client = useConfigSetting(`project_${slug}_client`, project.location);
-  const year = useConfigSetting(`project_${slug}_year`, project.year);
+export default function Services() {
+  const [activeService, setActiveService] = useState(services[0]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [lightboxImg, setLightboxImg] = useState<{src: string, alt: string, detail: string} | null>(null);
 
   return (
-    <motion.div
-      className="relative group overflow-hidden cursor-none magnetic-target"
-      style={{ marginTop: index === 1 ? '3rem' : 0 }}
-      initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }} transition={{ duration: 0.9, delay: index * 0.15 }}
-    >
-      <div className="relative aspect-[3/4] overflow-hidden">
-        <ManagedImage
-          slotId={project.slotId} defaultSrc={project.src} alt={title} fill
-          className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent" />
+    <main className="relative bg-alabaster text-charcoal overflow-hidden">
+
+      {/* ── BACKGROUND IMAGE REVEAL ── */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {services.map((s) => (
+          <div key={s.id} className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+            style={{ opacity: activeService.id === s.id ? 1 : 0 }}>
+          <ManagedImage slotId={`service_bg_${s.id}`} defaultSrc={s.image} alt={s.title} fill className="object-cover" />
+          </div>
+        ))}
+        <div className="absolute inset-0 bg-alabaster/88 backdrop-blur-[3px]" />
       </div>
-      <div className="absolute bottom-0 left-0 p-6">
-        <p className="text-[10px] uppercase tracking-widest text-brass mb-2">{category} · {year}</p>
-        <h3 className="text-2xl font-serif italic">{title}</h3>
-        <p className="text-xs opacity-50 mt-1 font-sans tracking-wider">{client}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-export default function Home() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef });
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
-
-  const googleRatingValue = useConfigSetting('google_rating_value', '5.0');
-  const googleRatingCount = useConfigSetting('google_rating_count', '80+');
-  const contactPhone = useConfigSetting('contact_phone', '+91 98765 43210');
-  const contactWhatsapp = useConfigSetting('contact_whatsapp', '919876543210');
-
-  return (
-    <main className="bg-charcoal text-alabaster overflow-hidden">
 
       {/* ── HERO ── */}
-      <section ref={heroRef} className="relative h-screen flex items-end pb-20 md:pb-28 overflow-hidden">
-        <motion.div className="absolute inset-0 z-0" style={{ scale: heroScale }}>
-          <ManagedImage
-            slotId="hero_bg"
-            defaultSrc="https://picsum.photos/seed/hero-luxury/1920/1080"
-            alt="Jay Interiors — Luxury Interior Design Pune"
-            fill priority
-            className="object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent" />
-        </motion.div>
-
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-brass/10 rounded-full blur-[150px] pointer-events-none" />
-
-        <motion.div
-          className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12"
-          style={{ opacity: heroOpacity, y: heroY }}
+      <section className="relative z-10 max-w-7xl mx-auto pt-40 px-6 md:px-12 pb-4">
+        <motion.p
+          className="text-xs uppercase tracking-[0.4em] text-brass mb-4"
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
         >
-          <motion.p
-            className="text-xs uppercase tracking-[0.4em] text-brass mb-4"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-          >
-            Baner, Pune · Est. 2012 · One-Stop Solution for All Interior Works
-          </motion.p>
+          One-Stop Solution for All Interior Works
+        </motion.p>
+        <motion.h1
+          className="text-5xl md:text-7xl font-serif italic tracking-tighter leading-none mb-6"
+          initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          Our<br /><span className="text-brass">Disciplines</span>
+        </motion.h1>
 
-          <motion.h1
-            className="text-[clamp(3rem,10vw,8rem)] font-serif italic tracking-tighter leading-none mb-6 max-w-4xl"
-            initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          >
-            Where Space<br />Becomes<br /><span className="text-brass">Sculpture.</span>
-          </motion.h1>
-
-          {/* Mini badges */}
-          <motion.div
-            className="flex flex-wrap gap-3 mb-8"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-          >
-            {['45-Day Handover', '10-Year Warranty', 'Europe Hardware', `${googleRatingValue} Google Rating`].map((b) => (
-              <span key={b} className="text-[9px] uppercase tracking-widest border border-brass/40 text-brass px-3 py-1">
-                {b}
-              </span>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="flex flex-col sm:flex-row gap-5 items-start"
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8 }}
-          >
-            <a
-              href={`https://wa.me/${contactWhatsapp}`} target="_blank" rel="noopener noreferrer"
-              className="magnetic-target cursor-none px-10 py-5 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500"
-            >
-              Start Your Project →
-            </a>
-            <Link href="/portfolio"
-              className="magnetic-target cursor-none px-10 py-5 border border-alabaster/30 font-sans uppercase tracking-widest text-xs hover:border-brass hover:text-brass transition-colors duration-500"
-            >
-              View Our Work
-            </Link>
-          </motion.div>
+        {/* Trust strip */}
+        <motion.div
+          className="flex flex-wrap gap-3 mb-10"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.4 }}
+        >
+          {['45-Day Handover', '10-Year Furniture Warranty', 'European Hardware', 'Hettich · Blum · Grass'].map((b) => (
+            <span key={b} className="text-[9px] uppercase tracking-widest border border-brass/50 text-brass px-3 py-1.5 bg-brass/5">
+              {b}
+            </span>
+          ))}
         </motion.div>
-
-        <div className="absolute bottom-10 right-12 flex flex-col items-center gap-2 opacity-40">
-          <span className="text-[9px] uppercase tracking-[0.3em]">Scroll</span>
-          <div className="w-px h-16 bg-alabaster/40 overflow-hidden mt-2">
-            <motion.div
-              className="w-full h-full bg-brass origin-top"
-              animate={{ scaleY: [0, 1, 0], y: ['0%', '0%', '100%'] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            />
-          </div>
-        </div>
       </section>
 
-      {/* ── TRUST STRIP (PARTNERS & HARDWARE) ── */}
-      <section className="bg-charcoal/50 border-y border-alabaster/10 py-8 px-6 overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 opacity-60">
-          <p className="text-[10px] uppercase tracking-widest font-sans whitespace-nowrap hidden md:block">
-            Engineered With The World&apos;s Best
-          </p>
-          <div className="flex gap-8 md:gap-16 items-center overflow-x-auto w-full md:w-auto scrollbar-hide pb-2 md:pb-0">
-            {['Hettich', 'Blum', 'Grass', 'Hafele', 'Ebco', 'Saint-Gobain'].map(brand => (
-              <span key={brand} className="text-xl md:text-2xl font-serif italic whitespace-nowrap">
-                {brand}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── STATS BAR ── */}
-      <section className="border-t border-b border-alabaster/10 py-12 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:divide-x md:divide-alabaster/10 md:gap-0">
-          {stats.map((stat, i) => (
+      {/* ── SERVICE ACCORDION LIST ── */}
+      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pb-12">
+        <div className="flex flex-col w-full border-t border-charcoal/15">
+          {services.map((service, i) => (
             <motion.div
-              key={stat.label}
-              className="flex flex-col items-center text-center px-6"
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.8, delay: i * 0.1 }}
+              key={service.id}
+              className="border-b border-charcoal/15"
+              onMouseEnter={() => setActiveService(service)}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.05 }}
             >
-              <span className="text-4xl md:text-5xl font-serif italic text-brass mb-2">{stat.value}</span>
-              <span className="text-[10px] uppercase tracking-widest opacity-50">{stat.label}</span>
+              {/* Header row */}
+              <button
+                className="w-full flex flex-col md:flex-row md:items-center justify-between py-8 text-left relative overflow-hidden group cursor-none magnetic-target"
+                onClick={() => setExpandedId(expandedId === service.id ? null : service.id)}
+              >
+                <div className="flex items-start gap-8 z-10 transition-colors duration-500">
+                  <span className="text-lg font-serif text-charcoal/40 transition-colors mt-1">{service.id}</span>
+                  <div>
+                    <h2 className="text-3xl md:text-5xl font-serif italic tracking-tighter transition-colors duration-300 group-hover:text-brass">{service.title}</h2>
+                    <p className="text-sm font-sans opacity-60 mt-1 tracking-wide">{service.tagline}</p>
+                  </div>
+                </div>
+                <span className="mt-4 md:mt-0 z-10 text-sm uppercase tracking-widest transition-all duration-500 group-hover:text-brass">
+                  {expandedId === service.id ? 'Close ↑' : 'Details →'}
+                </span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {expandedId === service.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pb-16">
+                      {/* Description */}
+                      <p className="font-sans text-charcoal/60 leading-relaxed mb-10 text-sm max-w-2xl">{service.desc}</p>
+
+                      {/* ── PROFESSIONAL SUB-ITEM CARD GRID ── */}
+                      <div className="mb-12">
+                        <div className="flex items-center gap-4 mb-6">
+                          <span className="w-6 h-px bg-brass" />
+                          <p className="text-[10px] uppercase tracking-[0.3em] text-brass">What&apos;s Included</p>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          {service.items.map((item, j) => {
+                            const slotId = `service_item_${service.id}_${j}`;
+                            const defaultLightboxSrc = `https://picsum.photos/seed/jay-${service.id}-${j}/1200/1600`;
+                            const defaultCardSrc = `https://picsum.photos/seed/jay-${service.id}-${j}/600/450`;
+                            
+                            return (
+                              <button
+                                key={j}
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  const activeUrl = getImage(slotId, defaultLightboxSrc);
+                                  setLightboxImg({ src: activeUrl, alt: item.name, detail: item.detail }); 
+                                }}
+                                className="relative block w-full text-left aspect-[4/3] overflow-hidden group cursor-none magnetic-target"
+                              >
+                                {/* Image */}
+                                <ManagedImage
+                                  slotId={slotId}
+                                  defaultSrc={defaultCardSrc}
+                                alt={item.name}
+                                fill
+                                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                              />
+                              {/* Permanent dark gradient — always readable */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
+                              {/* Hover brass tint */}
+                              <div className="absolute inset-0 bg-brass/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                              {/* Number badge */}
+                              <div className="absolute top-3 left-3 w-7 h-7 bg-charcoal/70 border border-alabaster/20 flex items-center justify-center">
+                                <span className="text-[9px] text-brass font-serif">{String(j + 1).padStart(2, '0')}</span>
+                              </div>
+
+                              {/* Brass corner bracket on hover */}
+                              <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-brass opacity-0 group-hover:opacity-100 transition-all duration-300" />
+
+                              {/* Text — always visible at bottom */}
+                              <div className="absolute bottom-0 left-0 right-0 p-4">
+                                <p className="font-serif italic text-alabaster text-base leading-tight mb-1">
+                                  {item.name}
+                                </p>
+                                <p className="font-sans text-alabaster/60 text-[10px] uppercase tracking-wider leading-snug">
+                                  {item.detail}
+                                </p>
+                                {/* Enquire link hint */}
+                                <p className="text-brass text-[9px] uppercase tracking-widest mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                  View Details →
+                                </p>
+                              </div>
+                            </button>
+                          );
+                        })}
+                        </div>
+                      </div>
+
+                      {/* ── PROMISE + IMAGE + CTA ── */}
+                      <div className="grid md:grid-cols-2 gap-10 items-start border-t border-charcoal/10 pt-10">
+                        {/* Promise list */}
+                        <div>
+                          <div className="flex items-center gap-4 mb-5">
+                            <span className="w-6 h-px bg-brass" />
+                            <p className="text-[10px] uppercase tracking-[0.3em] text-brass">Our Promise</p>
+                          </div>
+                          <div className="flex flex-col gap-4">
+                            {service.includes.map((inc, j) => (
+                              <div key={j} className="flex items-start gap-4 group">
+                                <span className="text-brass font-serif text-lg leading-none shrink-0 mt-0.5">✦</span>
+                                <span className="text-sm font-sans text-charcoal/70 leading-relaxed group-hover:text-charcoal transition-colors duration-300">{inc}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Service image + CTA */}
+                        <div className="flex flex-col gap-4">
+                          <div className="relative aspect-[16/9] overflow-hidden">
+                            <ManagedImage
+                              slotId={`service_bg_${service.id}`}
+                              defaultSrc={service.image}
+                              alt={service.title} fill
+                              className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
+                            <div className="absolute bottom-4 left-4">
+                              <p className="text-[10px] uppercase tracking-widest text-brass mb-1">Jay Interiors</p>
+                              <p className="font-serif italic text-alabaster text-lg">{service.title}</p>
+                            </div>
+                          </div>
+                          <a
+                            href={`https://wa.me/919876543210?text=Hi, I'm interested in ${encodeURIComponent(service.title)} services`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-charcoal text-alabaster font-sans uppercase tracking-widest text-xs font-medium hover:bg-brass hover:text-charcoal transition-colors duration-400 group"
+                          >
+                            <span>Enquire About {service.title}</span>
+                            <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           ))}
         </div>
       </section>
 
-
-
-      {/* ── SERVICES GRID ── */}
-      <section className="py-24 px-6 md:px-12">
+      {/* ── MATERIAL & FINISH LIBRARY ── */}
+      <section className="relative z-10 py-24 px-6 md:px-12 bg-alabaster text-charcoal border-t border-charcoal/10">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-end mb-16">
-            <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">What We Do</p>
-              <h2 className="text-5xl md:text-6xl font-serif italic tracking-tighter leading-none">Our Disciplines</h2>
-            </div>
-            <Link href="/services" className="magnetic-target cursor-none hidden md:block text-xs uppercase tracking-widest opacity-50 hover:opacity-100 hover:text-brass transition-all duration-300">
-              Explore All →
-            </Link>
+          <div className="mb-16">
+            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">The Finishes</p>
+            <h2 className="text-5xl md:text-6xl font-serif italic tracking-tighter leading-none">Material Library</h2>
+            <p className="mt-4 font-sans text-charcoal/60 max-w-2xl">
+              Experience our curated selection of premium finishes for modular kitchens and wardrobes. Sourced globally, engineered for Indian homes.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {serviceCategories.map((svc, i) => (
-              <motion.div
-                key={svc.title}
-                className={`relative group bg-gradient-to-br ${svc.color} to-charcoal border border-alabaster/10 p-6 flex flex-col gap-3 hover:border-brass/50 transition-all duration-500 cursor-none magnetic-target overflow-hidden`}
-                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.05 }}
-              >
-                <span className="text-3xl">{svc.icon}</span>
-                <h3 className="text-lg font-serif tracking-tight">{svc.title}</h3>
-                <p className="text-xs font-sans leading-relaxed opacity-50 group-hover:opacity-80 transition-opacity duration-500">{svc.desc}</p>
-                <Link href="/services" className="text-[9px] uppercase tracking-widest text-brass opacity-0 group-hover:opacity-100 transition-opacity duration-500 mt-auto">
-                  Learn More →
-                </Link>
-                {/* corner accent */}
-                <div className="absolute top-0 right-0 w-0 h-0 border-l-[30px] border-l-transparent border-t-[30px] border-t-brass/20 group-hover:border-t-brass/40 transition-colors duration-500" />
-              </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { name: 'PU Lacquer', desc: 'High-gloss & Matte Polyurethane', color: 'bg-stone-300' },
+              { name: 'Acrylic', desc: 'Scratch-resistant solid colors', color: 'bg-zinc-800 text-alabaster' },
+              { name: 'Fluted Glass', desc: 'Textured translucent panels', color: 'bg-teal-900/20 backdrop-blur-md' },
+              { name: 'Walnut Veneer', desc: 'Natural wood grain finishes', color: 'bg-amber-900/80 text-alabaster' },
+              { name: 'Statuario Quartz', desc: 'Premium countertop surfaces', color: 'bg-gray-100' },
+              { name: 'Brushed Brass', desc: 'European hardware accents', color: 'bg-[#C8A97E]' },
+              { name: 'Laminate', desc: 'Textured & suede edge-banded', color: 'bg-stone-600 text-alabaster' },
+              { name: 'Mild Steel', desc: 'Powder-coated frame structures', color: 'bg-charcoal text-alabaster' },
+            ].map((mat, i) => (
+              <div key={i} className={`aspect-square p-6 flex flex-col justify-end group cursor-none magnetic-target transition-transform hover:scale-95 ${mat.color}`}>
+                <h3 className="font-serif italic text-xl mb-1">{mat.name}</h3>
+                <p className="font-sans text-[10px] uppercase tracking-widest opacity-70">{mat.desc}</p>
+              </div>
             ))}
           </div>
-
-          <div className="mt-10 flex justify-center">
-            <Link href="/services"
-              className="magnetic-target cursor-none px-10 py-5 border border-alabaster/20 font-sans uppercase tracking-widest text-xs hover:border-brass hover:text-brass transition-colors duration-500"
-            >
-              Explore All Services →
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* ── BRAND STATEMENT ── */}
-      <section className="py-32 px-6 md:px-12 bg-alabaster text-charcoal">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }} transition={{ duration: 1 }}
-          >
-            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-6">Who We Are</p>
-            <h2 className="text-5xl md:text-7xl font-serif italic tracking-tighter leading-none">
-              We Don&apos;t<br />Decorate.<br /><span className="opacity-30">We Envision.</span>
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }} transition={{ duration: 1, delay: 0.2 }}
-            className="flex flex-col gap-6"
-          >
-            <p className="text-lg font-sans text-charcoal/70 leading-relaxed">
-              Jay Interiors is Pune&apos;s foremost end-to-end furniture & interior design studio. Founded by <strong className="text-charcoal">Dev</strong> and <strong className="text-charcoal">Suresh</strong>, we have spent over a decade crafting spaces that transcend the ordinary.
-            </p>
-            <p className="text-lg font-sans text-charcoal/70 leading-relaxed">
-              From modular kitchens in Baner to bespoke penthouse interiors in Koregaon Park — every project delivered in <strong className="text-charcoal">45 days</strong> with a <strong className="text-charcoal">10-year furniture warranty</strong>.
-            </p>
-
-            {/* Hardware brands */}
-            <div className="bg-charcoal/5 border border-charcoal/10 p-6">
-              <p className="text-[9px] uppercase tracking-widest opacity-40 mb-3">Hardware We Trust</p>
-              <div className="flex flex-wrap gap-3">
-                {hardwareBrands.map((b) => (
-                  <span key={b} className="text-xs uppercase tracking-widest border border-brass/50 text-brass px-4 py-2 font-sans font-medium">{b}</span>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 bg-charcoal/5 border border-charcoal/10 p-6">
-              <span className="text-3xl">⭐</span>
-              <div>
-                <p className="text-2xl font-serif">{googleRatingValue} Google Rating</p>
-                <p className="text-xs uppercase tracking-widest text-brass mt-1">Verified by {googleRatingCount} Satisfied Clients</p>
-              </div>
-            </div>
-            <Link href="/about" className="magnetic-target cursor-none text-xs uppercase tracking-widest text-brass hover:opacity-60 transition-opacity w-fit mt-2">
-              Our Full Story →
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── BEFORE & AFTER TRANSFORMATIONS ── */}
-      <section className="py-24 px-6 md:px-12 bg-charcoal text-alabaster border-t border-alabaster/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">The Jay Interiors Transformation</p>
-            <h2 className="text-4xl md:text-6xl font-serif italic tracking-tighter leading-none mb-6">
-              Vision to Reality.
-            </h2>
-            <p className="font-sans text-alabaster/60 max-w-2xl mx-auto">
-              Swipe to see how we turn raw, uninspired spaces into breathtaking architectural sculptures. Every detail planned, every inch perfected.
-            </p>
-          </div>
-
-          <div className="max-w-5xl mx-auto bg-alabaster/5 p-2 border border-alabaster/10 rounded-sm">
-            <BeforeAfterSlider 
-              beforeImage="https://picsum.photos/seed/before-kitchen/1200/800?grayscale"
-              afterImage="https://picsum.photos/seed/after-kitchen/1200/800"
-            />
-            <div className="p-6 text-center">
-              <h3 className="text-xl font-serif italic mb-2">The Noir Kitchen Remodel</h3>
-              <p className="text-xs uppercase tracking-widest text-brass opacity-80">Baner, Pune · Delivered in 28 Days</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── RENOVATION BANNER ── */}
-      <section className="relative py-20 px-6 md:px-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-brass/20 via-brass/10 to-transparent" />
-        <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-20">
-          <ManagedImage slotId="renovation_banner" defaultSrc="https://picsum.photos/seed/renovation-banner/900/500" alt="Renovation" fill className="object-cover" />
+      {/* ── VISIT THE STUDIO CTA ── */}
+      <section className="relative z-10 py-24 px-6 md:px-12 bg-charcoal text-alabaster overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+          <ManagedImage slotId="service_studio_cta" defaultSrc="https://picsum.photos/seed/studiobaner/800/800" alt="Jay Interiors Studio" fill className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-charcoal" />
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="max-w-xl">
-            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">Complete Home Makeover</p>
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-6">Experience It Live</p>
             <h2 className="text-4xl md:text-6xl font-serif italic tracking-tighter leading-none mb-6">
-              Renovation<br />Done <span className="text-brass">Right.</span>
+              Touch. Feel.<br />Believe.
             </h2>
             <p className="font-sans text-alabaster/70 leading-relaxed mb-8">
-              From old to extraordinary — full home renovation services delivered in 45 days. Civil work, painting, plumbing, furniture and lighting. All under one roof.
+              Words and pictures can only say so much. We invite you to our Baner studio to experience the smooth glide of a Hettich drawer, the flawless finish of PU paint, and the sturdy build of our modular units firsthand.
             </p>
-            <a
-              href={`https://wa.me/${contactWhatsapp}`} target="_blank" rel="noopener noreferrer"
-              className="magnetic-target cursor-none inline-flex px-10 py-5 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500"
-            >
-              Plan My Renovation →
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURED WORK ── */}
-      <section className="py-24 px-6 md:px-12 border-t border-alabaster/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-end mb-16">
-            <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">Selected Work</p>
-              <h2 className="text-5xl md:text-6xl font-serif italic tracking-tighter leading-none">The Vault</h2>
-            </div>
-            <Link href="/portfolio" className="magnetic-target cursor-none hidden md:block text-xs uppercase tracking-widest opacity-50 hover:opacity-100 hover:text-brass transition-all duration-300">
-              View All Projects →
-            </Link>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 items-start">
-            {featuredProjects.map((project, i) => (
-              <FeaturedProjectCard
-                key={project.id}
-                project={project}
-                index={i}
-              />
-            ))}
-          </div>
-
-          <div className="mt-8 flex md:hidden justify-center">
-            <Link href="/portfolio" className="magnetic-target cursor-none text-xs uppercase tracking-widest opacity-60 hover:text-brass transition-all">
-              View All Projects →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ── */}
-      <section className="py-32 px-6 md:px-12 bg-charcoal relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brass/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="mb-16 text-center">
-            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">Client Stories</p>
-            <h2 className="text-5xl md:text-6xl font-serif italic tracking-tighter leading-none">
-              Voices of<br /><span className="opacity-30">Satisfaction</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <motion.div
-                key={i}
-                className="bg-alabaster/5 border border-alabaster/10 backdrop-blur-sm p-8 flex flex-col gap-6"
-                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.8, delay: i * 0.15 }}
+            <div className="flex flex-col sm:flex-row gap-5">
+              <a href="https://wa.me/919876543210?text=I'd like to book a studio visit" target="_blank" rel="noopener noreferrer"
+                className="magnetic-target cursor-none px-10 py-5 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500"
               >
-                <div className="flex gap-1">
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <span key={j} className="text-brass text-sm">★</span>
-                  ))}
-                </div>
-                <p className="font-sans text-alabaster/70 leading-relaxed text-sm italic">&ldquo;{t.quote}&rdquo;</p>
-                <div className="mt-auto border-t border-alabaster/10 pt-6">
-                  <p className="font-serif text-alabaster">{t.author}</p>
-                  <p className="text-xs uppercase tracking-widest text-brass mt-1 opacity-70">{t.project}</p>
-                </div>
+                Book a Studio Visit →
+              </a>
+              <div className="flex flex-col justify-center">
+                <p className="text-xs uppercase tracking-widest text-brass">Baner, Pune</p>
+                <p className="text-sm font-sans opacity-60 mt-1">Open Mon-Sat, 10 AM - 7 PM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PROCESS ── */}
+      <section className="relative z-10 py-24 px-6 md:px-12 bg-charcoal text-alabaster">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16">
+            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">How We Work</p>
+            <h2 className="text-5xl md:text-6xl font-serif italic tracking-tighter leading-none">The Process</h2>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-px bg-alabaster/10">
+            {process.map((p, i) => (
+              <motion.div
+                key={p.step}
+                className="bg-charcoal p-8 flex flex-col gap-4 group hover:bg-brass/10 transition-colors duration-500"
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.12 }}
+              >
+                <span className="text-4xl font-serif italic text-brass">{p.step}</span>
+                <h3 className="text-xl font-serif">{p.title}</h3>
+                <p className="text-sm font-sans text-alabaster/60 leading-relaxed">{p.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── BOTTOM CTA ── */}
-      <section className="py-32 px-6 md:px-12 relative overflow-hidden border-t border-alabaster/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.p
-            className="text-xs uppercase tracking-[0.4em] text-brass mb-6"
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-          >
-            Begin Your Journey
-          </motion.p>
-          <motion.h2
-            className="text-5xl md:text-8xl font-serif italic tracking-tighter leading-none mb-12"
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 1 }}
-          >
-            Ready to Build<br />Something<br /><span className="text-brass">Extraordinary?</span>
-          </motion.h2>
-          <motion.div
-            className="flex flex-col sm:flex-row gap-6 justify-center"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <a
-              href={`https://wa.me/${contactWhatsapp}`} target="_blank" rel="noopener noreferrer"
-              className="magnetic-target cursor-none px-12 py-6 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500"
-            >
-              WhatsApp Us Now →
-            </a>
-            <a href={`tel:${contactPhone.replace(/\s+/g, '')}`}
-              className="magnetic-target cursor-none px-12 py-6 border border-alabaster/20 font-sans uppercase tracking-widest text-xs hover:border-brass hover:text-brass transition-colors duration-500"
-            >
-              Call {contactPhone}
-            </a>
-          </motion.div>
+      {/* ── WHY JAY INTERIORS ── */}
+      <section className="relative z-10 py-24 px-6 md:px-12 bg-alabaster text-charcoal">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16">
+            <p className="text-xs uppercase tracking-[0.4em] text-brass mb-4">Why Choose Us</p>
+            <h2 className="text-5xl md:text-6xl font-serif italic tracking-tighter leading-none">The Jay<br />Difference</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {differentiators.map((d, i) => (
+              <motion.div
+                key={d.title}
+                className="flex flex-col gap-4 border-t-2 border-brass pt-6"
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.1 }}
+              >
+                <h3 className="text-xl font-serif">{d.title}</h3>
+                <p className="text-sm font-sans opacity-60 leading-relaxed">{d.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* ── CTA ── */}
+      <section className="relative z-10 py-24 px-6 md:px-12 bg-charcoal text-alabaster text-center">
+        <motion.p className="text-xs uppercase tracking-[0.4em] text-brass mb-6"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+        >
+          Ready to Begin?
+        </motion.p>
+        <motion.h2
+          className="text-5xl md:text-7xl font-serif italic tracking-tighter leading-none mb-12"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ duration: 1 }}
+        >
+          Let&apos;s Design<br />Your World.
+        </motion.h2>
+        <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer"
+            className="magnetic-target cursor-none px-12 py-6 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500"
+          >
+            WhatsApp Us →
+          </a>
+          <Link href="/portfolio"
+            className="magnetic-target cursor-none px-12 py-6 border border-alabaster/20 font-sans uppercase tracking-widest text-xs hover:border-brass hover:text-brass transition-colors duration-500"
+          >
+            See Our Work
+          </Link>
+        </div>
+      </section>
+
+      {/* ── LIGHTBOX MODAL ── */}
+      <AnimatePresence>
+        {lightboxImg && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-[999] flex items-center justify-center bg-charcoal/95 backdrop-blur-md p-4 md:p-12 cursor-none magnetic-target"
+            onClick={() => setLightboxImg(null)}
+          >
+            {/* Close button hint */}
+            <div className="absolute top-8 right-8 z-[1000] text-alabaster uppercase tracking-widest text-xs font-sans opacity-60">
+              Close ✕
+            </div>
+            
+            {/* Modal Content */}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-4xl max-h-[85vh] aspect-[3/4] md:aspect-[4/3] bg-charcoal overflow-hidden group border border-brass/20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={lightboxImg.src}
+                alt={lightboxImg.alt}
+                className="absolute inset-0 w-full h-full object-contain md:object-cover"
+                referrerPolicy="no-referrer"
+              />
+              {/* Overlay for text */}
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent pointer-events-none" />
+              
+              <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 pointer-events-none">
+                <p className="font-serif italic text-alabaster text-3xl md:text-5xl leading-tight mb-3">
+                  {lightboxImg.alt}
+                </p>
+                <p className="font-sans text-brass text-sm uppercase tracking-widest leading-snug">
+                  {lightboxImg.detail}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </main>
   );
