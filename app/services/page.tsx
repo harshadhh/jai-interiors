@@ -11,7 +11,7 @@ const services = [
     id: '01',
     title: 'Modular Kitchen',
     tagline: 'Europe-grade kitchens. 10-year warranty.',
-    image: 'https://picsum.photos/seed/modular-kitchen/1920/1080',
+    image: '',
     desc: 'Our modular kitchen division is the crown of Jay Interiors. We offer fully customised kitchen solutions using European hardware (Hettich, Blum, Grass) with a 10-year furniture warranty. From Acrylic to Lacquered PU finishes — every kitchen is engineered for Indian cooking and designed for luxury living.',
     items: [
       { name: 'Tandems', detail: 'Acrylic Sheets · Laminate Sheets · PU + Deco Finish' },
@@ -30,7 +30,7 @@ const services = [
     id: '02',
     title: 'Kitchen Accessories',
     tagline: 'Smart storage. Effortless organisation.',
-    image: 'https://picsum.photos/seed/kitchen-acc/1920/1080',
+    image: '',
     desc: 'The difference between a good kitchen and a great one lies in the accessories. We source and install the finest functional hardware — from magic corners to pull-down basket elevators — making every inch of your kitchen work smarter.',
     items: [
       { name: 'Handles', detail: 'Profile, bow, bar, flush & edge-pull in matte black, gold & SS' },
@@ -45,7 +45,7 @@ const services = [
     id: '03',
     title: 'Bedroom',
     tagline: 'Rest. Restore. Reimagine your sanctuary.',
-    image: 'https://picsum.photos/seed/bedroom-svc/1920/1080',
+    image: '',
     desc: 'Your bedroom is your most personal space. We design complete bedroom solutions — from custom beds and wardrobes to study nooks and wall décor — ensuring every element is tailored to your lifestyle and aesthetic. With our end-to-end furniture approach and 10-year warranty, your bedroom is built to last.',
     items: [
       { name: 'Hydraulic Bed', detail: 'Storage bed with gas-lift mechanism — Queen & King sizes' },
@@ -65,7 +65,7 @@ const services = [
     id: '04',
     title: 'Living Room',
     tagline: 'The heart of your home. Reimagined.',
-    image: 'https://picsum.photos/seed/living-svc/1920/1080',
+    image: '',
     desc: 'The living room is where life unfolds — family gatherings, quiet evenings, first impressions. We design every element of this space with cinematic attention to detail, from the TV wall to the ceiling, creating a space that feels alive at every hour.',
     items: [
       { name: 'TV Unit', detail: 'With louvers, back-lit panels, fluted glass inserts & cove lighting' },
@@ -82,7 +82,7 @@ const services = [
     id: '05',
     title: 'Entrance Design',
     tagline: 'First impressions are everything.',
-    image: 'https://picsum.photos/seed/entrance-svc/1920/1080',
+    image: '',
     desc: 'The entrance to your home is your personal statement to the world. We design entrance areas that are dramatic, functional, and unmistakably curated — from the main door to the foyer wall and beyond.',
     items: [
       { name: 'Wall Panelling', detail: 'Fluted, ribbed, leather-look & stone-effect panels' },
@@ -98,7 +98,7 @@ const services = [
     id: '06',
     title: 'Balcony',
     tagline: 'Your outdoor escape. Designed with care.',
-    image: 'https://picsum.photos/seed/balcony-svc/1920/1080',
+    image: '',
     desc: 'Balconies are often the most neglected space in Indian homes. We transform them into premium outdoor retreats — weather-resistant, stylish, and functional — with PVC ceiling systems that are both beautiful and durable.',
     items: [
       { name: 'PVC Ceiling', detail: 'Premium PVC false ceiling — weather-resistant, anti-fungal, easy-clean' },
@@ -109,7 +109,7 @@ const services = [
     id: '07',
     title: 'Wallpapers',
     tagline: 'Your walls, your story.',
-    image: 'https://picsum.photos/seed/wallpaper-svc/1920/1080',
+    image: '',
     desc: 'Wallpapers are the quickest way to transform a room. We offer fully custom-designed wallpapers — from photomurals and geometric prints to textured and metallic finishes — printed and installed to perfection.',
     items: [
       { name: 'Custom Designed Wallpapers', detail: 'Photomural · Geometric · Floral · Abstract · Textured · Metallic' },
@@ -120,7 +120,7 @@ const services = [
     id: '08',
     title: 'Tiles',
     tagline: 'Surfaces that define the space.',
-    image: 'https://picsum.photos/seed/tiles-svc/1920/1080',
+    image: '',
     desc: 'The right tile can transform a bathroom, kitchen, or living space from ordinary to extraordinary. We source and supply premium tiles — from large-format full body to handcrafted marble — and handle installation with millimetre precision.',
     items: [
       { name: 'Full Body Tiles', detail: 'Large format 800×1600, 1200×2400 — matte, glossy, textured' },
@@ -133,7 +133,7 @@ const services = [
     id: '09',
     title: 'Lighting Design',
     tagline: 'Light is the most powerful design element.',
-    image: 'https://picsum.photos/seed/light-svc/1920/1080',
+    image: '',
     desc: 'We treat lighting as a living material. Our lighting design service creates layered systems — ambient, accent, task, and dramatic — that sculpt the mood of every space at every hour. We specify, source, and install complete lighting ecosystems tailored to your lifestyle.',
     items: [
       { name: 'Panel Lights', detail: 'Surface-mounted panels · Recessed rectangle panels' },
@@ -149,7 +149,7 @@ const services = [
     id: '10',
     title: 'Civil Work',
     tagline: 'Solid foundations. Flawless finishes.',
-    image: 'https://picsum.photos/seed/civil-svc/1920/1080',
+    image: '',
     desc: 'Great interiors demand great civil work underneath. Our civil team handles all structural and finishing work in-house — ensuring seamless integration with the interior design. No subcontracting, no surprises.',
     items: [
       { name: 'Painting', detail: 'Interior & exterior — textured, smooth, luxury emulsion & enamel' },
@@ -161,7 +161,7 @@ const services = [
     id: '11',
     title: 'Commercial Spaces',
     tagline: 'Spaces that work as hard as you do.',
-    image: 'https://picsum.photos/seed/commercial-svc/1920/1080',
+    image: '',
     desc: 'Commercial interiors require a different lens — function-first, brand-aligned, and built to impress clients. We design offices, shops, and mall spaces that boost productivity, attract customers, and reflect your brand identity.',
     items: [
       { name: 'Office Work', detail: 'Workstations, cabins, reception, conference rooms & pantries' },
@@ -284,8 +284,8 @@ export default function Services() {
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                           {service.items.map((item, j) => {
                             const slotId = `service_item_${service.id}_${j}`;
-                            const defaultLightboxSrc = `https://picsum.photos/seed/jay-${service.id}-${j}/1200/1600`;
-                            const defaultCardSrc = `https://picsum.photos/seed/jay-${service.id}-${j}/600/450`;
+                            const defaultLightboxSrc = '';
+                            const defaultCardSrc = '';
                             
                             return (
                               <button
@@ -424,7 +424,7 @@ export default function Services() {
       {/* ── VISIT THE STUDIO CTA ── */}
       <section className="relative z-10 py-24 px-6 md:px-12 bg-charcoal text-alabaster overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
-          <ManagedImage slotId="service_studio_cta" defaultSrc="https://picsum.photos/seed/studiobaner/800/800" alt="Jay Interiors Studio" fill className="object-cover" />
+          <ManagedImage slotId="service_studio_cta" defaultSrc='' alt="Jay Interiors Studio" fill className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-l from-transparent to-charcoal" />
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
