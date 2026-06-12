@@ -60,7 +60,7 @@ export function Cursor() {
   return (
     <>
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[9999] mix-blend-difference bg-white"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[100000] mix-blend-difference bg-white"
         style={{
           x: smoothX,
           y: smoothY,
@@ -75,7 +75,7 @@ export function Cursor() {
       />
       {/* Soft glow behind the cursor */}
       <motion.div
-        className="fixed top-0 left-0 w-64 h-64 -ml-32 -mt-32 rounded-full pointer-events-none z-[9998] opacity-30 blur-3xl bg-brass"
+        className="fixed top-0 left-0 w-64 h-64 -ml-32 -mt-32 rounded-full pointer-events-none z-[99999] opacity-30 blur-3xl bg-brass"
         style={{
           x: smoothX,
           y: smoothY,

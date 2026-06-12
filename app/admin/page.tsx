@@ -18,8 +18,14 @@ const IMAGE_SLOTS = {
       { id: 'featured_1', label: 'Featured Project 1 — The Penthouse', defaultSrc: '', section: 'The Vault (Featured Work)' },
       { id: 'featured_2', label: 'Featured Project 2 — Villa 74', defaultSrc: '', section: 'The Vault (Featured Work)' },
       { id: 'featured_3', label: 'Featured Project 3 — Glass Pavilion', defaultSrc: '', section: 'The Vault (Featured Work)' },
-      { id: 'before_after_before', label: 'Before/After — Before Image', defaultSrc: '', section: 'Before & After Slider' },
-      { id: 'before_after_after', label: 'Before/After — After Image', defaultSrc: '', section: 'Before & After Slider' },
+      { id: 'before_after_before_1', label: 'Before/After 1 — Before', defaultSrc: '', section: 'Before & After Slider 1' },
+      { id: 'before_after_after_1', label: 'Before/After 1 — After', defaultSrc: '', section: 'Before & After Slider 1' },
+      { id: 'before_after_before_2', label: 'Before/After 2 — Before', defaultSrc: '', section: 'Before & After Slider 2' },
+      { id: 'before_after_after_2', label: 'Before/After 2 — After', defaultSrc: '', section: 'Before & After Slider 2' },
+      { id: 'before_after_before_3', label: 'Before/After 3 — Before', defaultSrc: '', section: 'Before & After Slider 3' },
+      { id: 'before_after_after_3', label: 'Before/After 3 — After', defaultSrc: '', section: 'Before & After Slider 3' },
+      { id: 'before_after_before_4', label: 'Before/After 4 — Before', defaultSrc: '', section: 'Before & After Slider 4' },
+      { id: 'before_after_after_4', label: 'Before/After 4 — After', defaultSrc: '', section: 'Before & After Slider 4' },
       { id: 'renovation_banner', label: 'Renovation Banner Background', defaultSrc: '', section: 'Renovation Banner' },
     ],
   },
@@ -587,8 +593,14 @@ export default function AdminPage() {
     studio_hours_saturday: '',
     cloudinary_cloud_name: '',
     cloudinary_upload_preset: '',
-    before_after_title: '',
-    before_after_subtitle: '',
+    before_after_title_1: '',
+    before_after_subtitle_1: '',
+    before_after_title_2: '',
+    before_after_subtitle_2: '',
+    before_after_title_3: '',
+    before_after_subtitle_3: '',
+    before_after_title_4: '',
+    before_after_subtitle_4: '',
   });
   const [settingsSaved, setSettingsSaved] = useState(false);
 
@@ -629,8 +641,14 @@ export default function AdminPage() {
           studio_hours_saturday: getConfig('studio_hours_saturday', '10:00 – 14:00'),
           cloudinary_cloud_name: getConfig('cloudinary_cloud_name', ''),
           cloudinary_upload_preset: getConfig('cloudinary_upload_preset', ''),
-          before_after_title: getConfig('before_after_title', ''),
-          before_after_subtitle: getConfig('before_after_subtitle', ''),
+          before_after_title_1: getConfig('before_after_title_1', 'The Noir Kitchen Remodel'),
+          before_after_subtitle_1: getConfig('before_after_subtitle_1', 'Baner, Pune · Delivered in 28 Days'),
+          before_after_title_2: getConfig('before_after_title_2', 'The Marble Loft'),
+          before_after_subtitle_2: getConfig('before_after_subtitle_2', 'Viman Nagar · Delivered in 45 Days'),
+          before_after_title_3: getConfig('before_after_title_3', 'Studio Black'),
+          before_after_subtitle_3: getConfig('before_after_subtitle_3', 'Pune CBD · Delivered in 20 Days'),
+          before_after_title_4: getConfig('before_after_title_4', 'Glass Pavilion'),
+          before_after_subtitle_4: getConfig('before_after_subtitle_4', 'Aundh · Delivered in 60 Days'),
         });
       }, 0);
       return () => clearTimeout(timer);
@@ -1102,30 +1120,32 @@ NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '15px', marginTop: '5px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Before & After: Title</label>
-                      <input 
-                        type="text" 
-                        value={settings.before_after_title}
-                        onChange={(e) => setSettings(prev => ({ ...prev, before_after_title: e.target.value }))}
-                        placeholder="e.g. The Noir Kitchen Remodel"
-                        className="admin-form-input" 
-                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
-                      />
+                  {[1, 2, 3, 4].map(num => (
+                    <div key={`ba_settings_${num}`} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '15px', marginTop: '5px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                        <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Before & After {num}: Title</label>
+                        <input 
+                          type="text" 
+                          value={settings[`before_after_title_${num}` as keyof typeof settings]}
+                          onChange={(e) => setSettings(prev => ({ ...prev, [`before_after_title_${num}`]: e.target.value }))}
+                          placeholder="e.g. The Noir Kitchen Remodel"
+                          className="admin-form-input" 
+                          style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                        />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                        <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Before & After {num}: Subtitle</label>
+                        <input 
+                          type="text" 
+                          value={settings[`before_after_subtitle_${num}` as keyof typeof settings]}
+                          onChange={(e) => setSettings(prev => ({ ...prev, [`before_after_subtitle_${num}`]: e.target.value }))}
+                          placeholder="e.g. Baner, Pune · Delivered in 28 Days"
+                          className="admin-form-input" 
+                          style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                        />
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Before & After: Subtitle</label>
-                      <input 
-                        type="text" 
-                        value={settings.before_after_subtitle}
-                        onChange={(e) => setSettings(prev => ({ ...prev, before_after_subtitle: e.target.value }))}
-                        placeholder="e.g. Baner, Pune · Delivered in 28 Days"
-                        className="admin-form-input" 
-                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
-                      />
-                    </div>
-                  </div>
+                  ))}
 
                   <button 
                     type="submit" 

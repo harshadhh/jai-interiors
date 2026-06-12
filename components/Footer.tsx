@@ -57,10 +57,10 @@ export function Footer() {
         <div className="md:col-span-1 flex flex-col gap-6">
           <Link href="/" className="magnetic-target cursor-none w-fit flex items-center gap-3 group">
             {logoUrl ? (
-               <div className="w-10 h-10 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0">
-                 <img key={logoUrl} src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
-               </div>
-             ) : (
+              <div className="w-10 h-10 relative overflow-hidden flex items-center justify-center bg-transparent shrink-0">
+                <img key={logoUrl} src={logoUrl} alt="Jay Interiors" className="w-full h-full object-contain" />
+              </div>
+            ) : (
               <div className="w-10 h-10 bg-brass flex items-center justify-center shrink-0">
                 <span className="text-charcoal font-serif font-bold text-sm">JI</span>
               </div>
@@ -72,7 +72,12 @@ export function Footer() {
           <p className="text-xs font-sans leading-relaxed opacity-60">
             Pune&apos;s premier end-to-end interior design studio. One-stop solution for all interior works — from modular kitchens to complete home renovation.
           </p>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-brass opacity-80">Est. 2012 · Baner, Pune</p>
+          <div className="flex flex-col gap-3">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-brass opacity-80">Est. 2012 · Baner, Pune</p>
+            <a href="https://www.google.com/maps/place/Jay+interior+and+design/@18.5609978,73.6930585,13z/data=!4m10!1m2!2m1!1sjay+interiors!3m6!1s0x3bc2bf14d03b8f8f:0x404787ea84d05434!8m2!3d18.5609978!4d73.7692762!15sCg1qYXkgaW50ZXJpb3JzWg8iDWpheSBpbnRlcmlvcnOSARFpbnRlcmlvcl9kZXNpZ25lcpoBRENpOURRVWxSUVVOdlpFTm9kSGxqUmpsdlQyMXNNMXBIYkVaU1IzUkpVMVpHZWxKWFNuTmpSWEJ0WkRKc1RGVkZSUkFC4AEA-gEECA4QQQ!16s%2Fg%2F11yqzsfbct?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="magnetic-target cursor-none px-4 py-2 bg-brass/10 text-brass font-sans uppercase tracking-widest text-[9px] font-bold border border-brass/20 w-fit hover:bg-brass hover:text-charcoal transition-colors duration-500">
+              📍 Get Directions
+            </a>
+          </div>
 
           {/* Hardware Partners */}
           <div className="border-t border-alabaster/10 pt-5">
@@ -196,8 +201,8 @@ export function Footer() {
           >
             Designed by PEAKMEDIASTUDIO
             {/* Glowing underscore line */}
-            <span 
-              className="absolute bottom-[-6px] left-0 w-full h-[1px] bg-brass/50 scale-x-50 group-hover:scale-x-100 transition-transform duration-500 origin-center" 
+            <span
+              className="absolute bottom-[-6px] left-0 w-full h-[1px] bg-brass/50 scale-x-50 group-hover:scale-x-100 transition-transform duration-500 origin-center"
               style={{
                 boxShadow: '0 0 8px #C8A97E, 0 0 15px #C8A97E',
               }}
@@ -222,7 +227,8 @@ export function Footer() {
         </div>
 
         {/* Custom Glow Styles */}
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           @keyframes peak-glow {
             0% {
               text-shadow: 0 0 6px rgba(200, 169, 126, 0.4), 0 0 15px rgba(200, 169, 126, 0.2);

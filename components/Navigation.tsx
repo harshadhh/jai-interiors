@@ -185,9 +185,14 @@ export function Navigation() {
               >
                 WhatsApp Us →
               </a>
-              <p className="text-[10px] uppercase tracking-widest opacity-30 text-alabaster">
-                Baner, Pune · One-Stop Solution for All Interior Works
-              </p>
+              <div className="flex flex-col items-center gap-2 mt-4">
+                <p className="text-[10px] uppercase tracking-widest opacity-30 text-alabaster">
+                  Baner, Pune · One-Stop Solution for All Interior Works
+                </p>
+                <a href="https://www.google.com/maps/place/Jay+interior+and+design/@18.5609978,73.6930585,13z/data=!4m10!1m2!2m1!1sjay+interiors!3m6!1s0x3bc2bf14d03b8f8f:0x404787ea84d05434!8m2!3d18.5609978!4d73.7692762!15sCg1qYXkgaW50ZXJpb3JzWg8iDWpheSBpbnRlcmlvcnOSARFpbnRlcmlvcl9kZXNpZ25lcpoBRENpOURRVWxSUVVOdlpFTm9kSGxqUmpsdlQyMXNNMXBIYkVaU1IzUkpVMVpHZWxKWFNuTmpSWEJ0WkRKc1RGVkZSUkFC4AEA-gEECA4QQQ!16s%2Fg%2F11yqzsfbct?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="magnetic-target cursor-none px-4 py-2 bg-brass/10 text-brass font-sans uppercase tracking-widest text-[9px] font-bold border border-brass/20 hover:bg-brass hover:text-charcoal transition-colors duration-500">
+                  📍 Get Directions
+                </a>
+              </div>
             </motion.div>
           </motion.div>
         )}

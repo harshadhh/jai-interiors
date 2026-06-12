@@ -4,11 +4,11 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { ManagedImage } from '@/components/ManagedImage';
 
 interface BeforeAfterSliderProps {
-  beforeImage: string;
-  afterImage: string;
+  beforeSlotId: string;
+  afterSlotId: string;
 }
 
-export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSliderProps) {
+export function BeforeAfterSlider({ beforeSlotId, afterSlotId }: BeforeAfterSliderProps) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,7 +64,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
     >
       {/* After Image (Background - Shows on the right) */}
       <div className="absolute inset-0">
-        <ManagedImage slotId="before_after_after" defaultSrc={afterImage} alt="After" fill className="object-cover" unoptimized />
+        <ManagedImage slotId={afterSlotId} defaultSrc="" alt="After" fill className="object-cover" unoptimized />
         <div className="absolute top-4 right-4 z-10 bg-brass/90 text-charcoal px-3 py-1 text-[10px] uppercase tracking-widest font-bold backdrop-blur-sm">
           After
         </div>
@@ -75,7 +75,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         className="absolute inset-0 border-r border-brass shadow-[2px_0_10px_rgba(0,0,0,0.3)] z-20"
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       >
-        <ManagedImage slotId="before_after_before" defaultSrc={beforeImage} alt="Before" fill className="object-cover" unoptimized />
+        <ManagedImage slotId={beforeSlotId} defaultSrc="" alt="Before" fill className="object-cover" unoptimized />
         <div className="absolute top-4 left-4 bg-charcoal/80 text-alabaster px-3 py-1 text-[10px] uppercase tracking-widest backdrop-blur-sm">
           Before
         </div>

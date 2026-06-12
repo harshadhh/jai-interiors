@@ -56,13 +56,18 @@ export default function About() {
 
         <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center relative z-10">
           <div>
-            <motion.p
-              className="text-xs uppercase tracking-[0.4em] text-brass mb-6"
+            <motion.div
+              className="flex flex-col gap-3 mb-8"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
             >
-              Est. 2012 · Baner, Pune
-            </motion.p>
+              <p className="text-xs uppercase tracking-[0.4em] text-brass">
+                Est. 2012 · Baner, Pune
+              </p>
+              <a href="https://www.google.com/maps/place/Jay+interior+and+design/@18.5609978,73.6930585,13z/data=!4m10!1m2!2m1!1sjay+interiors!3m6!1s0x3bc2bf14d03b8f8f:0x404787ea84d05434!8m2!3d18.5609978!4d73.7692762!15sCg1qYXkgaW50ZXJpb3JzWg8iDWpheSBpbnRlcmlvcnOSARFpbnRlcmlvcl9kZXNpZ25lcpoBRENpOURRVWxSUVVOdlpFTm9kSGxqUmpsdlQyMXNNMXBIYkVaU1IzUkpVMVpHZWxKWFNuTmpSWEJ0WkRKc1RGVkZSUkFC4AEA-gEECA4QQQ!16s%2Fg%2F11yqzsfbct?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="magnetic-target cursor-none px-4 py-2 bg-brass/10 text-brass font-sans uppercase tracking-widest text-[9px] font-bold border border-brass/20 w-fit hover:bg-brass hover:text-charcoal transition-colors duration-500">
+                📍 Get Directions
+              </a>
+            </motion.div>
             <motion.h1
               className="text-6xl md:text-8xl font-serif italic tracking-tighter leading-none mb-8"
               initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}

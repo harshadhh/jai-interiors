@@ -39,11 +39,13 @@ export default function Contact() {
   const studioHoursWeekdays = useConfigSetting('studio_hours_weekdays', '10:00 – 18:00');
   const studioHoursSaturday = useConfigSetting('studio_hours_saturday', '10:00 – 14:00');
 
+  const MAP_URL = 'https://www.google.com/maps/place/Jay+interior+and+design/@18.5609978,73.6930585,13z/data=!4m10!1m2!2m1!1sjay+interiors!3m6!1s0x3bc2bf14d03b8f8f:0x404787ea84d05434!8m2!3d18.5609978!4d73.7692762!15sCg1qYXkgaW50ZXJpb3JzWg8iDWpheSBpbnRlcmlvcnOSARFpbnRlcmlvcl9kZXNpZ25lcpoBRENpOURRVWxSUVVOdlpFTm9kSGxqUmpsdlQyMXNNMXBIYkVaU1IzUkpVMVpHZWxKWFNuTmpSWEJ0WkRKc1RGVkZSUkFC4AEA-gEECA4QQQ!16s%2Fg%2F11yqzsfbct?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D';
+
   const contactInfo = [
     { label: 'WhatsApp', value: contactPhone, href: `https://wa.me/${contactWhatsapp}`, icon: '💬' },
     { label: 'Call Us', value: contactPhone, href: `tel:${contactPhone.replace(/\s+/g, '')}`, icon: '📞' },
     { label: 'Email', value: contactEmail, href: `mailto:${contactEmail}`, icon: '✉️' },
-    { label: 'Studio', value: contactAddress, href: 'https://maps.google.com', icon: '📍' },
+    { label: 'Studio', value: contactAddress, href: MAP_URL, icon: '📍' },
   ];
 
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', projectType: '', budget: '', message: '' });
@@ -123,6 +125,9 @@ export default function Contact() {
                   Thank you for reaching out. Dev or Suresh will personally contact you within 4 business hours.
                 </p>
                 <p className="text-xs uppercase tracking-widest text-brass mt-6">Jay Interiors · Baner, Pune</p>
+                <a href={MAP_URL} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block px-6 py-3 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500">
+                  Get Directions ↗
+                </a>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -210,16 +215,23 @@ export default function Contact() {
               <p className="text-[10px] uppercase tracking-widest text-brass mb-6">Reach Us Directly</p>
               <div className="flex flex-col gap-4">
                 {contactInfo.map((c) => (
-                  <a
-                    key={c.label} href={c.href} target="_blank" rel="noopener noreferrer"
-                    className="magnetic-target cursor-none flex items-center gap-5 border border-alabaster/10 p-5 hover:border-brass/50 hover:bg-alabaster/5 transition-all duration-300 group"
-                  >
-                    <span className="text-2xl">{c.icon}</span>
-                    <div>
-                      <p className="text-[9px] uppercase tracking-widest opacity-40 mb-1">{c.label}</p>
-                      <p className="font-sans text-sm group-hover:text-brass transition-colors duration-300">{c.value}</p>
-                    </div>
-                  </a>
+                  <div key={c.label} className="flex flex-col gap-2">
+                    <a
+                      href={c.href} target="_blank" rel="noopener noreferrer"
+                      className="magnetic-target cursor-none flex items-center gap-5 border border-alabaster/10 p-5 hover:border-brass/50 hover:bg-alabaster/5 transition-all duration-300 group"
+                    >
+                      <span className="text-2xl">{c.icon}</span>
+                      <div>
+                        <p className="text-[9px] uppercase tracking-widest opacity-40 mb-1">{c.label}</p>
+                        <p className="font-sans text-sm group-hover:text-brass transition-colors duration-300">{c.value}</p>
+                      </div>
+                    </a>
+                    {c.label === 'Studio' && (
+                      <a href={c.href} target="_blank" rel="noopener noreferrer" className="magnetic-target cursor-none w-full flex items-center justify-center gap-3 px-6 py-4 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500">
+                        📍 Get Directions
+                      </a>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
@@ -251,6 +263,29 @@ export default function Contact() {
                 <span className="text-lg">💬</span> WhatsApp Now
               </a>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── MAP EMBED ── */}
+      <section className="relative z-10 px-6 md:px-12 pb-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="w-full h-[400px] border border-alabaster/10 bg-alabaster/5 relative group">
+            <iframe
+              src="https://maps.google.com/maps?q=Jay+Interiors+Baner+Pune&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(1.2)' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 opacity-70 group-hover:opacity-100 transition-opacity duration-500"
+            />
+          </div>
+          <div className="mt-4 flex justify-end">
+            <a href={MAP_URL} target="_blank" rel="noopener noreferrer" className="magnetic-target cursor-none px-8 py-4 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500">
+              📍 Get Directions on Google Maps →
+            </a>
           </div>
         </div>
       </section>

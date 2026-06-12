@@ -7,6 +7,24 @@ import { useRef } from 'react';
 import { BeforeAfterSlider } from '@/components/BeforeAfterSlider';
 import { useConfigSetting } from '@/hooks/useConfigStore';
 
+function BeforeAfterCard({ num, defaultTitle, defaultSubtitle }: { num: number, defaultTitle: string, defaultSubtitle: string }) {
+  const title = useConfigSetting(`before_after_title_${num}`, defaultTitle);
+  const subtitle = useConfigSetting(`before_after_subtitle_${num}`, defaultSubtitle);
+
+  return (
+    <div className="bg-alabaster/5 p-2 border border-alabaster/10 rounded-sm flex flex-col">
+      <BeforeAfterSlider 
+        beforeSlotId={`before_after_before_${num}`}
+        afterSlotId={`before_after_after_${num}`}
+      />
+      <div className="p-6 text-center flex-grow flex flex-col justify-center">
+        <h3 className="text-xl font-serif italic mb-2">{title}</h3>
+        <p className="text-xs uppercase tracking-widest text-brass opacity-80">{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
 const stats = [
   { value: '12+', label: 'Years of Excellence' },
   { value: '200+', label: 'Projects Delivered' },
@@ -131,13 +149,18 @@ export default function Home() {
           className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12"
           style={{ opacity: heroOpacity, y: heroY }}
         >
-          <motion.p
-            className="text-xs uppercase tracking-[0.4em] text-brass mb-4"
+          <motion.div
+            className="flex flex-col gap-3 mb-6"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            Baner, Pune · Est. 2012 · One-Stop Solution for All Interior Works
-          </motion.p>
+            <p className="text-xs uppercase tracking-[0.4em] text-brass">
+              Baner, Pune · Est. 2012 · One-Stop Solution for All Interior Works
+            </p>
+            <a href="https://www.google.com/maps/place/Jay+interior+and+design/@18.5609978,73.6930585,13z/data=!4m10!1m2!2m1!1sjay+interiors!3m6!1s0x3bc2bf14d03b8f8f:0x404787ea84d05434!8m2!3d18.5609978!4d73.7692762!15sCg1qYXkgaW50ZXJpb3JzWg8iDWpheSBpbnRlcmlvcnOSARFpbnRlcmlvcl9kZXNpZ25lcpoBRENpOURRVWxSUVVOdlpFTm9kSGxqUmpsdlQyMXNNMXBIYkVaU1IzUkpVMVpHZWxKWFNuTmpSWEJ0WkRKc1RGVkZSUkFC4AEA-gEECA4QQQ!16s%2Fg%2F11yqzsfbct?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="magnetic-target cursor-none px-4 py-2 bg-brass/10 text-brass font-sans uppercase tracking-widest text-[9px] font-bold border border-brass/20 w-fit hover:bg-brass hover:text-charcoal transition-colors duration-500">
+              📍 Get Directions
+            </a>
+          </motion.div>
 
           <motion.h1
             className="text-[clamp(3rem,10vw,8rem)] font-serif italic tracking-tighter leading-none mb-6 max-w-4xl"
@@ -331,19 +354,11 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="max-w-5xl mx-auto bg-alabaster/5 p-2 border border-alabaster/10 rounded-sm">
-            <BeforeAfterSlider 
-              beforeImage=''
-              afterImage=''
-            />
-            <div className="p-6 text-center">
-              <h3 className="text-xl font-serif italic mb-2">
-                {useConfigSetting('before_after_title', 'The Noir Kitchen Remodel')}
-              </h3>
-              <p className="text-xs uppercase tracking-widest text-brass opacity-80">
-                {useConfigSetting('before_after_subtitle', 'Baner, Pune · Delivered in 28 Days')}
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            <BeforeAfterCard num={1} defaultTitle="The Noir Kitchen Remodel" defaultSubtitle="Baner, Pune · Delivered in 28 Days" />
+            <BeforeAfterCard num={2} defaultTitle="The Marble Loft" defaultSubtitle="Viman Nagar · Delivered in 45 Days" />
+            <BeforeAfterCard num={3} defaultTitle="Studio Black" defaultSubtitle="Pune CBD · Delivered in 20 Days" />
+            <BeforeAfterCard num={4} defaultTitle="Glass Pavilion" defaultSubtitle="Aundh · Delivered in 60 Days" />
           </div>
         </div>
       </section>
