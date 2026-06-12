@@ -398,6 +398,7 @@ function ImageSlotCard({
       <div className="admin-preview-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
         {state.currentUrl ? (
           <Image
+            key={state.currentUrl}
             src={state.currentUrl}
             alt={label}
             fill
@@ -826,7 +827,7 @@ export default function AdminPage() {
         <div className="admin-topbar-inner">
           <div className="admin-topbar-brand">
             {logoUrl ? (
-              <img src={logoUrl} alt="Logo" className="admin-topbar-logo" style={{ objectFit: 'contain', background: 'transparent' }} />
+              <img key={logoUrl} src={logoUrl} alt="Logo" className="admin-topbar-logo" style={{ objectFit: 'contain', background: 'transparent' }} />
             ) : (
               <span className="admin-topbar-logo">JI</span>
             )}
