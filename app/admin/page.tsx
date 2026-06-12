@@ -629,6 +629,8 @@ export default function AdminPage() {
           studio_hours_saturday: getConfig('studio_hours_saturday', '10:00 – 14:00'),
           cloudinary_cloud_name: getConfig('cloudinary_cloud_name', ''),
           cloudinary_upload_preset: getConfig('cloudinary_upload_preset', ''),
+          before_after_title: getConfig('before_after_title', ''),
+          before_after_subtitle: getConfig('before_after_subtitle', ''),
         });
       }, 0);
       return () => clearTimeout(timer);
