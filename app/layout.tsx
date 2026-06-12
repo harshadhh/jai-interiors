@@ -1,4 +1,4 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import { Playfair_Display, Outfit } from 'next/font/google';
 import './globals.css'; // Global styles
 import { Providers } from '@/components/Providers';
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${playfair.variable} ${outfit.variable}`}>
       <body suppressHydrationWarning className="bg-alabaster text-charcoal selection:bg-brass selection:text-alabaster">
