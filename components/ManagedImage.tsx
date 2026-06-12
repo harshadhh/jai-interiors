@@ -33,6 +33,12 @@ export function ManagedImage({
     setIsLoaded(false);
   }
 
+  if (!src) {
+    return (
+      <div className={cn("relative w-full h-full bg-charcoal/10 overflow-hidden", className)} style={style} />
+    );
+  }
+
   return (
     <div className="relative w-full h-full bg-charcoal/10 overflow-hidden">
       <img
