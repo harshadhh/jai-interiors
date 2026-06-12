@@ -1,0 +1,59 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-alabaster: #F9F9F7;
+  --color-cashmere: #EBE6DF;
+  --color-brass: #C8A97E;
+  --color-charcoal: #1C1B1A;
+
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-outfit);
+}
+
+@layer base {
+  body {
+    @apply bg-alabaster text-charcoal font-sans antialiased overflow-x-hidden;
+  }
+
+  @media (min-width: 768px) and (pointer: fine) {
+    body {
+      cursor: none; /* Hide default cursor only on desktop devices with hover support */
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+/* Lenis Recommended Styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Custom Scrollbar hide */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Base custom selection */
+::selection {
+  @apply bg-brass text-alabaster;
+}
