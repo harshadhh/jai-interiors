@@ -535,12 +535,12 @@ export default function Services() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-[999] flex items-center justify-center bg-charcoal/95 backdrop-blur-md p-4 md:p-12 cursor-none magnetic-target"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-charcoal/95 backdrop-blur-md p-4 md:p-8"
             onClick={() => setLightboxImg(null)}
           >
             {/* Close button hint */}
-            <div className="absolute top-8 right-8 z-[1000] text-alabaster uppercase tracking-widest text-xs font-sans opacity-60">
+            <div className="absolute top-6 right-6 z-[10000] text-alabaster uppercase tracking-widest text-xs font-sans opacity-60 hover:opacity-100 cursor-pointer">
               Close ✕
             </div>
             
@@ -549,20 +549,21 @@ export default function Services() {
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative inline-flex flex-col max-w-[95vw] md:max-w-5xl max-h-[90vh] bg-charcoal overflow-hidden group border border-brass/20 rounded-md shadow-2xl"
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="relative rounded-md overflow-hidden shadow-2xl border border-brass/20"
+              style={{ display: 'inline-block' }}
               onClick={(e) => e.stopPropagation()}
             >
               <img
                 src={lightboxImg.src}
                 alt={lightboxImg.alt}
-                className="w-auto h-auto max-w-full max-h-[90vh] object-contain"
+                className="block w-auto h-auto max-w-[90vw] max-h-[85vh] object-contain"
                 referrerPolicy="no-referrer"
               />
               {/* Overlay for text */}
-              <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent pointer-events-none" />
               
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 pointer-events-none">
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 pointer-events-none">
                 <p className="font-serif italic text-alabaster text-2xl md:text-4xl leading-tight mb-2 drop-shadow-lg">
                   {lightboxImg.alt}
                 </p>
