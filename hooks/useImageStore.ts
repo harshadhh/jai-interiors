@@ -15,8 +15,12 @@ export function useImageUrl(slotId: string, defaultUrl: string): string {
   const handleUpdate = useCallback(
     (e: Event) => {
       const detail = (e as CustomEvent).detail as { slotId: string; url: string | null };
-      if (detail.slotId === slotId || detail.slotId === '*') {
+      if (detail.slotId === slotId) {
         setUrl(detail.url || defaultUrl);
+      } else if (detail.slotId === '*') {
+        // Global sync from Firebase or a full reset occurred
+        // We must re-read our specific slot from the freshly updated localStorage
+        setUrl(getImage(slotId, defaultUrl));
       }
     },
     [slotId, defaultUrl]
