@@ -3,7 +3,8 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { ManagedImage } from '@/components/ManagedImage';
 import { getImage } from '@/lib/imageStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 
 const services = [
@@ -189,7 +190,12 @@ const differentiators = [
 export default function Services() {
   const [activeService, setActiveService] = useState(services[0]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [lightboxImg, setLightboxImg] = useState<{src: string, alt: string, detail: string} | null>(null);
+  const [lightboxImg, setLightboxImg] = useState<{ src: string, alt: string, detail: string } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <main className="relative bg-alabaster text-charcoal overflow-hidden">
@@ -199,7 +205,7 @@ export default function Services() {
         {services.map((s) => (
           <div key={s.id} className="absolute inset-0 transition-opacity duration-700 ease-in-out"
             style={{ opacity: activeService.id === s.id ? 1 : 0 }}>
-          <ManagedImage slotId={`service_bg_${s.id}`} defaultSrc={s.image} alt={s.title} fill className="object-cover" />
+            <ManagedImage slotId={`service_bg_${s.id}`} defaultSrc={s.image} alt={s.title} fill className="object-cover" />
           </div>
         ))}
         <div className="absolute inset-0 bg-alabaster/88 backdrop-blur-[3px]" />
@@ -286,14 +292,14 @@ export default function Services() {
                             const slotId = `service_item_${service.id}_${j}`;
                             const defaultLightboxSrc = '';
                             const defaultCardSrc = '';
-                            
+
                             return (
                               <button
                                 key={j}
-                                onClick={(e) => { 
-                                  e.stopPropagation(); 
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   const activeUrl = getImage(slotId, defaultLightboxSrc);
-                                  setLightboxImg({ src: activeUrl, alt: item.name, detail: item.detail }); 
+                                  setLightboxImg({ src: activeUrl, alt: item.name, detail: item.detail });
                                 }}
                                 className="relative block w-full text-left aspect-[4/3] overflow-hidden group cursor-none magnetic-target"
                               >
@@ -301,39 +307,39 @@ export default function Services() {
                                 <ManagedImage
                                   slotId={slotId}
                                   defaultSrc={defaultCardSrc}
-                                alt={item.name}
-                                fill
-                                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                              />
-                              {/* Permanent dark gradient — always readable */}
-                              <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
-                              {/* Hover brass tint */}
-                              <div className="absolute inset-0 bg-brass/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                  alt={item.name}
+                                  fill
+                                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                />
+                                {/* Permanent dark gradient — always readable */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
+                                {/* Hover brass tint */}
+                                <div className="absolute inset-0 bg-brass/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                              {/* Number badge */}
-                              <div className="absolute top-3 left-3 w-7 h-7 bg-charcoal/70 border border-alabaster/20 flex items-center justify-center">
-                                <span className="text-[9px] text-brass font-serif">{String(j + 1).padStart(2, '0')}</span>
-                              </div>
+                                {/* Number badge */}
+                                <div className="absolute top-3 left-3 w-7 h-7 bg-charcoal/70 border border-alabaster/20 flex items-center justify-center">
+                                  <span className="text-[9px] text-brass font-serif">{String(j + 1).padStart(2, '0')}</span>
+                                </div>
 
-                              {/* Brass corner bracket on hover */}
-                              <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-brass opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                                {/* Brass corner bracket on hover */}
+                                <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-brass opacity-0 group-hover:opacity-100 transition-all duration-300" />
 
-                              {/* Text — always visible at bottom */}
-                              <div className="absolute bottom-0 left-0 right-0 p-4">
-                                <p className="font-serif italic text-alabaster text-base leading-tight mb-1">
-                                  {item.name}
-                                </p>
-                                <p className="font-sans text-alabaster/60 text-[10px] uppercase tracking-wider leading-snug">
-                                  {item.detail}
-                                </p>
-                                {/* Enquire link hint */}
-                                <p className="text-brass text-[9px] uppercase tracking-widest mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                  View Details →
-                                </p>
-                              </div>
-                            </button>
-                          );
-                        })}
+                                {/* Text — always visible at bottom */}
+                                <div className="absolute bottom-0 left-0 right-0 p-4">
+                                  <p className="font-serif italic text-alabaster text-base leading-tight mb-1">
+                                    {item.name}
+                                  </p>
+                                  <p className="font-sans text-alabaster/60 text-[10px] uppercase tracking-wider leading-snug">
+                                    {item.detail}
+                                  </p>
+                                  {/* Enquire link hint */}
+                                  <p className="text-brass text-[9px] uppercase tracking-widest mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    View Details →
+                                  </p>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -529,52 +535,55 @@ export default function Services() {
       </section>
 
       {/* ── LIGHTBOX MODAL ── */}
-      <AnimatePresence>
-        {lightboxImg && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-charcoal/95 backdrop-blur-md p-4 md:p-8"
-            onClick={() => setLightboxImg(null)}
-          >
-            {/* Close button hint */}
-            <div className="absolute top-6 right-6 z-[10000] text-alabaster uppercase tracking-widest text-xs font-sans opacity-60 hover:opacity-100 cursor-pointer">
-              Close ✕
-            </div>
-            
-            {/* Modal Content */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {lightboxImg && (
             <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="relative rounded-md overflow-hidden shadow-2xl border border-brass/20"
-              style={{ display: 'inline-block' }}
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-[9999] flex items-center justify-center bg-charcoal/95 backdrop-blur-md p-4 md:p-8"
+              onClick={() => setLightboxImg(null)}
             >
-              <img
-                src={lightboxImg.src}
-                alt={lightboxImg.alt}
-                className="block w-auto h-auto max-w-[90vw] max-h-[85vh] object-contain"
-                referrerPolicy="no-referrer"
-              />
-              {/* Overlay for text */}
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent pointer-events-none" />
-              
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 pointer-events-none">
-                <p className="font-serif italic text-alabaster text-2xl md:text-4xl leading-tight mb-2 drop-shadow-lg">
-                  {lightboxImg.alt}
-                </p>
-                <p className="font-sans text-brass text-[10px] md:text-xs uppercase tracking-widest leading-snug drop-shadow-md">
-                  {lightboxImg.detail}
-                </p>
+              {/* Close button hint */}
+              <div className="absolute top-6 right-6 z-[10000] text-alabaster uppercase tracking-widest text-xs font-sans opacity-60 hover:opacity-100 cursor-pointer">
+                Close ✕
               </div>
+              
+              {/* Modal Content */}
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="relative rounded-md overflow-hidden shadow-2xl border border-brass/20"
+                style={{ display: 'inline-block' }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img
+                  src={lightboxImg.src}
+                  alt={lightboxImg.alt}
+                  className="block w-auto h-auto max-w-[90vw] max-h-[85vh] object-contain"
+                  referrerPolicy="no-referrer"
+                />
+                {/* Overlay for text */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent pointer-events-none" />
+                
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 pointer-events-none">
+                  <p className="font-serif italic text-alabaster text-2xl md:text-4xl leading-tight mb-2 drop-shadow-lg">
+                    {lightboxImg.alt}
+                  </p>
+                  <p className="font-sans text-brass text-[10px] md:text-xs uppercase tracking-widest leading-snug drop-shadow-md">
+                    {lightboxImg.detail}
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
     </main>
   );
