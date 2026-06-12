@@ -1,7 +1,7 @@
 'use client';
 
 import { useImageUrl } from '@/hooks/useImageStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 type ManagedImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
@@ -24,32 +24,39 @@ export function ManagedImage({
   ...rest
 }: ManagedImageProps) {
   const src = useImageUrl(slotId, defaultSrc);
-  const [prevSrc, setPrevSrc] = useState(src);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Reset isLoaded when src changes to trigger clean fade-in
-  if (src !== prevSrc) {
-    setPrevSrc(src);
-    setIsLoaded(false);
-  }
+  useEffect(() => {
+    if (src) setIsLoaded(false);
+  }, [src]);
+
+  // Determine wrapper styling based on `fill` to perfectly mimic Next.js <Image fill />
+  const wrapperClass = fill ? "absolute inset-0" : "relative w-full h-full";
 
   if (!src) {
     return (
-      <div className={cn("relative w-full h-full bg-charcoal/10 overflow-hidden", className)} style={style} />
+      <div 
+        className={cn(wrapperClass, "bg-charcoal/10 overflow-hidden", className)} 
+        style={style} 
+      />
     );
   }
 
   return (
-    <div className="relative w-full h-full bg-charcoal/10 overflow-hidden">
+    <div className={cn(wrapperClass, "bg-charcoal/10 overflow-hidden")}>
       <img
         src={src}
         alt={alt}
         referrerPolicy="no-referrer"
+        ref={(img) => {
+          if (img && img.complete) setIsLoaded(true);
+        }}
         onLoad={() => setIsLoaded(true)}
         className={cn(
           "transition-all duration-700 ease-out",
           isLoaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.02] blur-sm",
-          fill ? "absolute inset-0 w-full h-full object-cover" : "",
+          fill ? "absolute inset-0 w-full h-full object-cover" : "w-full h-full object-cover",
           className
         )}
         style={{
