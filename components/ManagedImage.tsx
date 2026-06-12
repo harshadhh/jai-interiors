@@ -24,12 +24,15 @@ export function ManagedImage({
   ...rest
 }: ManagedImageProps) {
   const src = useImageUrl(slotId, defaultSrc);
+  const [prevSrc, setPrevSrc] = useState(src);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Reset isLoaded when src changes to trigger clean fade-in
-  useEffect(() => {
-    if (src) setIsLoaded(false);
-  }, [src]);
+  // Doing this during render is the recommended React pattern to avoid cascading renders
+  if (src !== prevSrc) {
+    setPrevSrc(src);
+    setIsLoaded(false);
+  }
 
   // Determine wrapper styling based on `fill` to perfectly mimic Next.js <Image fill />
   const wrapperClass = fill ? "absolute inset-0" : "relative w-full h-full";
