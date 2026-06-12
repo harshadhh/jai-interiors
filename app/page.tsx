@@ -15,9 +15,9 @@ const stats = [
 ];
 
 const featuredProjects = [
-  { id: 1, slotId: 'featured_1', title: 'The Penthouse', category: 'Luxury Residential', location: 'Baner Enclave, Pune', src: 'https://picsum.photos/seed/penth1/900/1200', year: '2024' },
-  { id: 2, slotId: 'featured_2', title: 'Villa 74', category: 'Modular Kitchen', location: 'Koregaon Park, Pune', src: 'https://picsum.photos/seed/villa74x/900/1200', year: '2024' },
-  { id: 3, slotId: 'featured_3', title: 'Glass Pavilion', category: 'Fall & Ceiling', location: 'Aundh, Pune', src: 'https://picsum.photos/seed/glasspav1/900/1200', year: '2023' },
+  { id: 1, slotId: 'featured_1', title: 'The Penthouse', category: 'Luxury Residential', location: 'Baner Enclave, Pune', src: '', year: '2024' },
+  { id: 2, slotId: 'featured_2', title: 'Villa 74', category: 'Modular Kitchen', location: 'Koregaon Park, Pune', src: '', year: '2024' },
+  { id: 3, slotId: 'featured_3', title: 'Glass Pavilion', category: 'Fall & Ceiling', location: 'Aundh, Pune', src: '', year: '2023' },
 ];
 
 const testimonials = [
@@ -117,7 +117,7 @@ export default function Home() {
         <motion.div className="absolute inset-0 z-0" style={{ scale: heroScale }}>
           <ManagedImage
             slotId="hero_bg"
-            defaultSrc="https://picsum.photos/seed/hero-luxury/1920/1080"
+            defaultSrc=''
             alt="Jay Interiors — Luxury Interior Design Pune"
             fill priority
             className="object-cover opacity-50"
@@ -333,8 +333,8 @@ export default function Home() {
 
           <div className="max-w-5xl mx-auto bg-alabaster/5 p-2 border border-alabaster/10 rounded-sm">
             <BeforeAfterSlider 
-              beforeImage="https://picsum.photos/seed/before-kitchen/1200/800?grayscale"
-              afterImage="https://picsum.photos/seed/after-kitchen/1200/800"
+              beforeImage=''
+              afterImage=''
             />
             <div className="p-6 text-center">
               <h3 className="text-xl font-serif italic mb-2">The Noir Kitchen Remodel</h3>
@@ -348,7 +348,7 @@ export default function Home() {
       <section className="relative py-20 px-6 md:px-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-brass/20 via-brass/10 to-transparent" />
         <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-20">
-          <ManagedImage slotId="renovation_banner" defaultSrc="https://picsum.photos/seed/renovation-banner/900/500" alt="Renovation" fill className="object-cover" />
+          <ManagedImage slotId="renovation_banner" defaultSrc='' alt="Renovation" fill className="object-cover" />
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-xl">
