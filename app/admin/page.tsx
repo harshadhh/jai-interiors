@@ -587,6 +587,8 @@ export default function AdminPage() {
     studio_hours_saturday: '',
     cloudinary_cloud_name: '',
     cloudinary_upload_preset: '',
+    before_after_title: '',
+    before_after_subtitle: '',
   });
   const [settingsSaved, setSettingsSaved] = useState(false);
 
@@ -1092,6 +1094,31 @@ NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
                         value={settings.cloudinary_upload_preset}
                         onChange={(e) => setSettings(prev => ({ ...prev, cloudinary_upload_preset: e.target.value }))}
                         placeholder="jay_interiors (default fallback)"
+                        className="admin-form-input" 
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '15px', marginTop: '5px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Before & After: Title</label>
+                      <input 
+                        type="text" 
+                        value={settings.before_after_title}
+                        onChange={(e) => setSettings(prev => ({ ...prev, before_after_title: e.target.value }))}
+                        placeholder="e.g. The Noir Kitchen Remodel"
+                        className="admin-form-input" 
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Before & After: Subtitle</label>
+                      <input 
+                        type="text" 
+                        value={settings.before_after_subtitle}
+                        onChange={(e) => setSettings(prev => ({ ...prev, before_after_subtitle: e.target.value }))}
+                        placeholder="e.g. Baner, Pune · Delivered in 28 Days"
                         className="admin-form-input" 
                         style={{ background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', padding: '12px', fontSize: '13px' }}
                       />
