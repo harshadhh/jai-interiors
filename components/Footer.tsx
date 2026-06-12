@@ -212,8 +212,8 @@ export function Footer() {
 
         {/* Right: Site Links */}
         <div className="flex items-center justify-center md:justify-end gap-8">
-          <Link href="#" className="opacity-40 hover:opacity-70 hover:text-alabaster transition-all magnetic-target cursor-none">Privacy Policy</Link>
-          <Link href="#" className="opacity-40 hover:opacity-70 hover:text-alabaster transition-all magnetic-target cursor-none">Terms of Service</Link>
+          <Link href="/privacy-policy" className="opacity-40 hover:opacity-70 hover:text-alabaster transition-all magnetic-target cursor-none">Privacy Policy</Link>
+          <Link href="/terms-conditions" className="opacity-40 hover:opacity-70 hover:text-alabaster transition-all magnetic-target cursor-none">Terms & Conditions</Link>
           <Link
             href="/admin"
             className="opacity-10 hover:opacity-40 hover:text-brass transition-all duration-500 magnetic-target cursor-none flex items-center gap-1.5 group"
