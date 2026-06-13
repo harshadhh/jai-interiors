@@ -79,8 +79,10 @@ export default function Contact() {
     <main className="bg-charcoal text-alabaster overflow-hidden">
 
       {/* ── GLOW ORBS ── */}
-      <div className="fixed top-1/3 left-1/4 w-[500px] h-[500px] bg-brass/8 rounded-full blur-[150px] pointer-events-none z-0" />
-      <div className="fixed bottom-1/4 right-1/4 w-[400px] h-[400px] bg-brass/5 rounded-full blur-[120px] pointer-events-none z-0" />
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-brass/8 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-brass/5 rounded-full blur-[120px]" />
+      </div>
 
       {/* ── HERO ── */}
       <section className="relative z-10 pt-40 pb-20 px-6 md:px-12">
