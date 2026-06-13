@@ -166,10 +166,10 @@ export function Navigation() {
               {/* Trust Badges */}
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { val: '45 Days', label: 'Handover' },
-                  { val: '10 Yrs', label: 'Warranty' },
+                  { val: '45-60 Days', label: 'Delivery' },
+                  { val: '9 Years', label: 'Experience' },
                   { val: `${googleRatingValue} ★`, label: 'Google Rating' },
-                  { val: '200+', label: 'Projects Done' },
+                  { val: '207+', label: 'Projects Delivered' },
                 ].map((b) => (
                   <div key={b.label} className="bg-alabaster/5 border border-alabaster/10 p-3 text-center">
                     <p className="text-brass font-serif italic text-lg">{b.val}</p>
