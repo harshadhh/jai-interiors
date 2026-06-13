@@ -32,8 +32,8 @@ const faqs = [
 ];
 
 export default function Contact() {
-  const contactPhone = useConfigSetting('contact_phone', '+91 98765 43210');
-  const contactWhatsapp = useConfigSetting('contact_whatsapp', '919876543210');
+  const contactPhone = useConfigSetting('contact_phone', '+91 79 7692 9913');
+  const contactWhatsapp = useConfigSetting('contact_whatsapp', '917976929913');
   const contactEmail = useConfigSetting('contact_email', 'hello@jayinteriors.in');
   const contactAddress = useConfigSetting('contact_address', 'Baner, Pune — 411045');
   const studioHoursWeekdays = useConfigSetting('studio_hours_weekdays', '10:00 – 18:00');
@@ -137,7 +137,7 @@ export default function Contact() {
                     <input
                       type="text" name="name" required value={formData.name} onChange={handleChange}
                       placeholder="Rahul Sharma"
-                      className="bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 cursor-none"
+                      className="w-full bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 cursor-none"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -145,7 +145,7 @@ export default function Contact() {
                     <input
                       type="tel" name="phone" required value={formData.phone} onChange={handleChange}
                       placeholder="+91 98765 43210"
-                      className="bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 cursor-none"
+                      className="w-full bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 cursor-none"
                     />
                   </div>
                 </div>
@@ -155,7 +155,7 @@ export default function Contact() {
                   <input
                     type="email" name="email" value={formData.email} onChange={handleChange}
                     placeholder="rahul@example.com"
-                    className="bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 cursor-none"
+                    className="w-full bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 cursor-none"
                   />
                 </div>
 
@@ -164,7 +164,7 @@ export default function Contact() {
                     <label className="text-[10px] uppercase tracking-widest opacity-50">Project Type *</label>
                     <select
                       name="projectType" required value={formData.projectType} onChange={handleChange}
-                      className="bg-charcoal border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster focus:border-brass focus:outline-none transition-colors duration-300 cursor-none appearance-none"
+                      className="w-full bg-charcoal border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster focus:border-brass focus:outline-none transition-colors duration-300 cursor-none appearance-none"
                     >
                       <option value="" disabled>Select a type</option>
                       {projectTypes.map(t => <option key={t} value={t}>{t}</option>)}
@@ -174,7 +174,7 @@ export default function Contact() {
                     <label className="text-[10px] uppercase tracking-widest opacity-50">Budget Range</label>
                     <select
                       name="budget" value={formData.budget} onChange={handleChange}
-                      className="bg-charcoal border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster focus:border-brass focus:outline-none transition-colors duration-300 cursor-none appearance-none"
+                      className="w-full bg-charcoal border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster focus:border-brass focus:outline-none transition-colors duration-300 cursor-none appearance-none"
                     >
                       <option value="" disabled>Select budget</option>
                       {budgetRanges.map(b => <option key={b} value={b}>{b}</option>)}
@@ -187,7 +187,7 @@ export default function Contact() {
                   <textarea
                     name="message" rows={5} value={formData.message} onChange={handleChange}
                     placeholder="Describe your space, your vision, and what you hope to achieve..."
-                    className="bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 resize-none cursor-none"
+                    className="w-full bg-transparent border border-alabaster/20 px-5 py-4 font-sans text-sm text-alabaster placeholder:opacity-30 focus:border-brass focus:outline-none transition-colors duration-300 resize-none cursor-none"
                   />
                 </div>
 

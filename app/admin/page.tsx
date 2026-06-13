@@ -633,8 +633,8 @@ export default function AdminPage() {
         setSettings({
           google_rating_value: getConfig('google_rating_value', '5.0'),
           google_rating_count: getConfig('google_rating_count', '80+'),
-          contact_phone: getConfig('contact_phone', '+91 98765 43210'),
-          contact_whatsapp: getConfig('contact_whatsapp', '919876543210'),
+          contact_phone: getConfig('contact_phone', '+91 79 7692 9913'),
+          contact_whatsapp: getConfig('contact_whatsapp', '917976929913'),
           contact_email: getConfig('contact_email', 'hello@jayinteriors.in'),
           contact_address: getConfig('contact_address', 'Baner, Pune — 411045'),
           studio_hours_weekdays: getConfig('studio_hours_weekdays', '10:00 – 18:00'),
@@ -1040,7 +1040,7 @@ NEXT_PUBLIC_ADMIN_PASSWORD=jay2024admin`}</pre>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                    <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>WhatsApp Number (digits only, e.g. 919876543210)</label>
+                    <label className="admin-slot-label" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>WhatsApp Number (digits only, e.g. 917976929913)</label>
                     <input 
                       type="text" 
                       value={settings.contact_whatsapp}

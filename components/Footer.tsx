@@ -21,16 +21,16 @@ const serviceCategories = [
 
 export function Footer() {
   const googleRatingValue = useConfigSetting('google_rating_value', '5.0');
-  const contactPhone = useConfigSetting('contact_phone', '+91 98765 43210');
-  const contactWhatsapp = useConfigSetting('contact_whatsapp', '919876543210');
+  const contactPhone = useConfigSetting('contact_phone', '+91 79 7692 9913');
+  const contactWhatsapp = useConfigSetting('contact_whatsapp', '917976929913');
   const contactEmail = useConfigSetting('contact_email', 'hello@jayinteriors.in');
   const logoUrl = useImageUrl('site_logo', '');
 
   const trustBadges = [
-    { value: '45 Days', label: 'Handover Guarantee' },
-    { value: '10 Years', label: 'Furniture Warranty' },
+    { value: '45-60 Days', label: 'Delivery' },
+    { value: '9 Years', label: 'Experience' },
     { value: `${googleRatingValue} ★`, label: 'Google Rating' },
-    { value: '200+', label: 'Projects Delivered' },
+    { value: '207+', label: 'Projects Delivered' },
   ];
   return (
     <footer className="bg-charcoal text-alabaster border-t border-alabaster/10 pt-24 pb-8 px-6 relative z-10 w-full overflow-hidden">
@@ -162,24 +162,6 @@ export function Footer() {
             </a>
           </div>
         </div>
-      </div>
-
-      {/* ── EUROPE & KITCHEN CALLOUT ── */}
-      <div className="max-w-7xl mx-auto mb-12 border border-brass/20 bg-brass/5 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <span className="text-2xl">🇪🇺</span>
-          <div>
-            <p className="font-serif italic text-lg text-brass">Europe & Kitchen Specialists</p>
-            <p className="text-xs opacity-50 font-sans tracking-wider mt-1">Premium European hardware & modular kitchen systems</p>
-          </div>
-        </div>
-        <a
-          href={`https://wa.me/${contactWhatsapp}`}
-          target="_blank" rel="noopener noreferrer"
-          className="magnetic-target cursor-none px-8 py-4 bg-brass text-charcoal font-sans uppercase tracking-widest text-xs font-bold hover:bg-alabaster transition-colors duration-500 shrink-0"
-        >
-          Get Free Quote →
-        </a>
       </div>
 
       {/* ── BOTTOM BAR ── */}

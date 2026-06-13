@@ -45,7 +45,7 @@ const reviews = [
 export default function About() {
   const googleRatingValue = useConfigSetting('google_rating_value', '5.0');
   const googleRatingCount = useConfigSetting('google_rating_count', '80+');
-  const contactWhatsapp = useConfigSetting('contact_whatsapp', '919876543210');
+  const contactWhatsapp = useConfigSetting('contact_whatsapp', '917976929913');
 
   return (
     <main className="bg-charcoal text-alabaster overflow-hidden">
@@ -250,11 +250,11 @@ export default function About() {
       <section className="py-24 px-6 md:px-12 bg-charcoal text-alabaster">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div className="relative aspect-square md:aspect-[4/5] overflow-hidden">
-            <ManagedImage 
+            <ManagedImage
               slotId="about_workshop"
               defaultSrc=''
-              alt="Jay Interiors Workshop" 
-              fill className="object-cover" 
+              alt="Jay Interiors Workshop"
+              fill className="object-cover"
             />
             <div className="absolute inset-0 border border-brass/30 m-4 pointer-events-none" />
           </div>
@@ -269,7 +269,7 @@ export default function About() {
             <p className="font-sans text-alabaster/70 leading-relaxed mb-8">
               Our master craftsmen combine traditional woodworking techniques with modern German machinery to create modular kitchens, wardrobes, and bespoke furniture that stand the test of time.
             </p>
-            
+
             <div className="grid grid-cols-2 gap-6 pt-8 border-t border-alabaster/10">
               <div>
                 <span className="block text-3xl font-serif italic text-brass mb-2">10k+</span>

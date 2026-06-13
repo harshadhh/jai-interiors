@@ -26,9 +26,9 @@ function BeforeAfterCard({ num, defaultTitle, defaultSubtitle }: { num: number, 
 }
 
 const stats = [
-  { value: '12+', label: 'Years of Excellence' },
-  { value: '200+', label: 'Projects Delivered' },
-  { value: '45 Days', label: 'Handover Guarantee' },
+  { value: '9 Yrs', label: 'Experience' },
+  { value: '207+', label: 'Projects Delivered' },
+  { value: '45-60 Days', label: 'Delivery' },
   { value: '10 Yrs', label: 'Furniture Warranty' },
 ];
 
@@ -40,19 +40,34 @@ const featuredProjects = [
 
 const testimonials = [
   {
-    quote: "Jay Interiors transformed our Baner apartment into a masterpiece. Every corner feels intentional, every material feels flawless. We get compliments every single day.",
-    author: "Priya & Rohit Sharma",
-    project: "The Whitefield Residence, Baner",
+    quote: "Would recommend to complete your dream house with Devji & Sureshji... What an excellent work done by both of them. Without them our house couldn't be a better place to live. Thank you!",
+    author: "Tarun Jangir",
+    project: "Google Review",
   },
   {
-    quote: "Dev and Suresh have an extraordinary eye for detail. They understood our vision better than we did. The modular kitchen they designed is simply unparalleled.",
-    author: "Ankur Mehta",
-    project: "Villa 74, Koregaon Park",
+    quote: "Amazing work! The furniture looks beautiful and the craftsmanship is top-class. The team is also very cooperative… highly recommended!!",
+    author: "Gayatri Katkade",
+    project: "Google Review",
   },
   {
-    quote: "Working with Jay Interiors was the best decision we made for our home. Their craftsmanship is world-class and the result is beyond anything we imagined.",
-    author: "Sneha & Vikram Kulkarni",
-    project: "The Terrace Penthouse, Kalyani Nagar",
+    quote: "Working with Jay Interior and design was a really good experience. The team was professional, supportive, and understood our requirements very well. The designs were practical and aesthetically pleasing.",
+    author: "Amarnath semra",
+    project: "Google Review",
+  },
+  {
+    quote: "Work and design quality is excellent. We are satisfied. Best solutions are provided and suitable to our premises.",
+    author: "Sandip Tarange",
+    project: "Google Review",
+  },
+  {
+    quote: "Professional and down to earth. Always suggest best options that work for you.",
+    author: "Amol Lonare",
+    project: "Google Review",
+  },
+  {
+    quote: "Excellent customer satisfaction. Fulfill the commitment within a timeframe.",
+    author: "Abhijeet Komalwar",
+    project: "Google Review",
   },
 ];
 
@@ -124,8 +139,8 @@ export default function Home() {
 
   const googleRatingValue = useConfigSetting('google_rating_value', '5.0');
   const googleRatingCount = useConfigSetting('google_rating_count', '80+');
-  const contactPhone = useConfigSetting('contact_phone', '+91 98765 43210');
-  const contactWhatsapp = useConfigSetting('contact_whatsapp', '919876543210');
+  const contactPhone = useConfigSetting('contact_phone', '+91 79 7692 9913');
+  const contactWhatsapp = useConfigSetting('contact_whatsapp', '917976929913');
 
   return (
     <main className="bg-charcoal text-alabaster overflow-hidden">
